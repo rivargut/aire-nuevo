@@ -1,0 +1,23 @@
+1. Cargar bootloader usando Atmel Studio:
+Procesador: SAMD21G18A
+Arduino Zero bootloader:  samd21_sam_ba.hex
+C:\Users\...\AppData\Local\Arduino15\packages\arduino\hardware\samd\1.8.4\bootloaders\zero
+
+2. En la interfase de Arduino, menu Tools->Board-> BoardManager, buscar paquete "Arduino SAMD Boards", Instalar
+
+3. Conectar a USB de la PC. Debe aparecer como Arduino Zero Bootloader (COMXX).  
+
+* Nota, en caso que haya algun problema con el firmware cargado y desee volverse a modo bootloader, estripar el boton de reset 
+dos veces rapidamente.
+
+4. Copiar \libraries a \Documents\Arduino\libraries
+
+5. Programas principales FONAtest y ECUGPS_r3 pueden copiarse a cualquier directorio local
+
+6. Copiar variant.cpp y variant.h a C:\Users\...\AppData\Local\Arduino15\packages\arduino\hardware\samd\1.8.4\variants\arduino_zero
+
+7. Abrir el sketch y dar Upload. Esto compila y carga en la tarjeta.
+
+8. Una vez cargado el FW, el poard vuelve a detectarse como un COM port distinto, ajustar acorde
+
+8. El puerto USB se usa para debug IO, usando el Serial Monitor (Ctrl-M)
