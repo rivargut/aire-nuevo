@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-#include <Adafruit_FONA.h>
+#include "Adafruit_FONA.h"
 
 #include <OBD9141.h>
 //#include <EEPROM.h>
@@ -24,7 +24,7 @@
 
 // OBD type (CAN / 9141 /KWD) will need to be programmed via software since no resource was allocated in hardware
 
-//Use Serial 1 on Custom Board
+//Use Serial 2 on Custom Board
 #define ISO_TX 1
 #define ISO_RX 2
 
@@ -39,7 +39,7 @@
 
 // Set reset for 12V relay
 
-#define PIN_OFF 25 
+#define PIN_OFF 25
 #define PIN_ON 26
 
 #define SD_CS 13
@@ -272,13 +272,13 @@ void printlogln (long unsigned int line) {
 }
 ///////////////////////////////////////////////////////////////////////////
 void setup() {
-  // put your setup code here, to run once:
+  // put your setup code here, to run once:s
 
   pinMode(PIN_ON, OUTPUT);
   pinMode(PIN_OFF, OUTPUT);
   pinMode(FONA_RST, OUTPUT);
 
-  obdflag = 1;	// HARDCODE FOR NOW
+  obdflag = 2;	// HARDCODE FOR NOW
   SerialUSB.begin(115200);
   rtc.begin();
   
@@ -297,8 +297,6 @@ void setup() {
     }
   printlogln(F("\r\n\r\n**********************"));
   printlogln(F("*****  ECU GPS  ******"));
-  printlogln(F("Initializing..."));
-
   
 // Init variables the first run
 
@@ -336,43 +334,55 @@ uint8_t EEPROMInit = 0;
 
    if (EEPROMSave.relay) {
       printlogln(F("Checking power relay is ON"));
-      digitalWrite(PIN_ON, HIGH);
       digitalWrite(PIN_OFF, LOW);
+      digitalWrite(PIN_ON, HIGH);
    } else {
       printlogln(F("Checking power relay is OFF"));
       digitalWrite(PIN_ON, LOW);
       digitalWrite(PIN_OFF, HIGH);
    }
-    
+  
+  pinMode(FONA_RST, OUTPUT);
+  digitalWrite(FONA_RST, HIGH);
+  delay(100);
+  printlogln(F("Initializing PWRKEY..."));
+  pinMode(FONA_PWRKEY, OUTPUT);
+  digitalWrite(FONA_PWRKEY, HIGH);
+  delay(1000);
+  digitalWrite(FONA_PWRKEY, LOW);
+  delay(1100);
+  digitalWrite(FONA_PWRKEY, HIGH);
+  
   // TO DO: change fona serial baud rate to 115200 as default
    fonaSerial->begin(4800);
    if (! fona.begin(*fonaSerial)) {
      printlogln(F("Couldn't find FONA"));
-     while (1);
    }
-   type = fona.type();
-   printlogln(F("FONA is found OK"));
-
-   // Print module IMEI number.
-   char imei[16] = {0}; // MUST use a 16 character buffer for IMEI!
-   uint8_t imeiLen = fona.getIMEI(imei);
-   if (imeiLen > 0) {
-      printlog(F("Module IMEI: ")); printlogln(imei);
+   else {
+     type = fona.type();
+     printlogln(F("FONA is found OK"));
+  
+     // Print module IMEI number.
+     char imei[16] = {0}; // MUST use a 16 character buffer for IMEI!
+     uint8_t imeiLen = fona.getIMEI(imei);
+     if (imeiLen > 0) {
+        printlog(F("Module IMEI: ")); printlogln(imei);
+     }
+     fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
+     printlog(F("SIM CCID = ")); printlogln(replybuffer);
+     
+     // Configure a GPRS APN, username, and password.
+     fona.setGPRSNetworkSettings(F("internet.movistar.cr"), F("movistarcr"), F("movistarcr"));
+  
+     //configure HTTP gets to follow redirects over SSL
+     fona.setHTTPSRedirect(true);
+  
+     // Turn on GPS
+     if (!fona.enableGPS(true))
+        printlogln(F("Failed to turn on GPS!"));
+     else
+        printlogln(F("GPS Enabled"));
    }
-   fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
-   printlog(F("SIM CCID = ")); printlogln(replybuffer);
-   
-   // Configure a GPRS APN, username, and password.
-   fona.setGPRSNetworkSettings(F("internet.movistar.cr"), F("movistarcr"), F("movistarcr"));
-
-   //configure HTTP gets to follow redirects over SSL
-   fona.setHTTPSRedirect(true);
-
-   // Turn on GPS
-   if (!fona.enableGPS(true))
-      printlogln(F("Failed to turn on GPS!"));
-   else
-      printlogln(F("GPS Enabled"));
 
    printlogln(F("Wait 2 seconds to start main loop..."));
    delay (2000);
@@ -385,14 +395,14 @@ uint8_t EEPROMInit = 0;
       }
       else if (obdflag == 2) {
         printlogln(F("OBD Port Type: ISO 9141 fast (KWP)"));
-        obd9141.begin(Serial1, ISO_RX, ISO_TX);
-        init_success =  obd9141.initKWP(); // Aveo uses KWP
         digitalWrite(LIN_SLP, HIGH);
+        obd9141.begin(Serial2, ISO_RX, ISO_TX);
+        init_success =  obd9141.initKWP(); // Aveo uses KWP
         printlog("OBD2 init success:"); printlogln(init_success);
       } else if (obdflag == 1) {
         printlogln(F("OBD Port Type: ISO 9141 slow"));
-        obd9141.begin(Serial1, ISO_RX, ISO_TX);
         digitalWrite(LIN_SLP, HIGH);
+        obd9141.begin(Serial2, ISO_RX, ISO_TX);
         init_success =  obd9141.init(); // crossfox uses 50 baud init
         printlog("OBD2 init success:"); printlogln(init_success);
       }
@@ -510,6 +520,7 @@ void ReadOBD() {
      res = obd9141.getCurrentPID(RPM,_16BITS);
      if (!res) {
         printlogln(F("** RPM reading invalid - redoing init"));
+        delay(500);
         if (obdflag == 2) {
            printlog(F("KWP Init - "));
            init_success =  obd9141.initKWP(); // Aveo uses KWP baud init
@@ -568,7 +579,7 @@ void ReadOBD() {
           printlog(fIAT);
        }
 
-
+       printlogln("");
   } // if (obdflag == 3)
   if (! engineflag) {
     printlogln("Engine is turned off - skipping calculation");
