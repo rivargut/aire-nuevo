@@ -106,8 +106,8 @@ static const uint8_t A0  = PIN_A0;
 // Serial2
 #define PIN_SERIAL2_RX       (2ul)
 #define PIN_SERIAL2_TX       (1ul)
-#define PAD_SERIAL2_TX       (UART_TX_PAD_2)
-#define PAD_SERIAL2_RX       (SERCOM_RX_PAD_1)
+#define PAD_SERIAL2_TX       (UART_TX_PAD_0)
+#define PAD_SERIAL2_RX       (SERCOM_RX_PAD_2)
 
 /*
  * SPI Interfaces
@@ -134,7 +134,7 @@ static const uint8_t SCK  = PIN_SPI_SCK ;
 #define PIN_SS1				  (24u)
 #define PERIPH_SPI1           sercom0
 #define PAD_SPI1_TX           SPI_PAD_2_SCK_3
-#define PAD_SPI1_RX           SERCOM_RX_PAD_0
+#define PAD_SPI1_RX           SERCOM_RX_PAD_2
 
 static const uint8_t SS1   = PIN_SS1;
 static const uint8_t MOSI1 = PIN_SPI1_MOSI ;
