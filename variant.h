@@ -114,12 +114,12 @@ static const uint8_t A0  = PIN_A0;
  */
 #define SPI_INTERFACES_COUNT 2
 // SPI 0 (default) for SD card
-#define PIN_SPI_MISO         (10u)
-#define PIN_SPI_MOSI         (11u)
+#define PIN_SPI_MOSI         (10u)
+#define PIN_SPI_MISO         (11u)
 #define PIN_SPI_SCK          (12u)
 #define PIN_SS				 (13u)
 #define PERIPH_SPI           sercom4
-#define PAD_SPI_TX           SPI_PAD_2_SCK_3
+#define PAD_SPI_TX           SPI_PAD_0_SCK_3
 #define PAD_SPI_RX           SERCOM_RX_PAD_0
 
 static const uint8_t SS   = PIN_SS;
@@ -134,7 +134,7 @@ static const uint8_t SCK  = PIN_SPI_SCK ;
 #define PIN_SS1				  (24u)
 #define PERIPH_SPI1           sercom0
 #define PAD_SPI1_TX           SPI_PAD_2_SCK_3
-#define PAD_SPI1_RX           SERCOM_RX_PAD_2
+#define PAD_SPI1_RX           SERCOM_RX_PAD_1
 
 static const uint8_t SS1   = PIN_SS1;
 static const uint8_t MOSI1 = PIN_SPI1_MOSI ;
