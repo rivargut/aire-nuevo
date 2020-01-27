@@ -31,6 +31,7 @@
 #define LPGSTATUSPIN A0 // A0 analog input
 #define LIN_SLP 3 // sleep pin for LIN IC
 
+
 // pin for FONA
 #define FONA_RST 4
 #define FONA_TX 5
@@ -38,10 +39,10 @@
 #define FONA_PWRKEY 7
 
 // Set reset for 12V relay
+#define PIN_OFF 26
+#define PIN_ON 25
 
-#define PIN_OFF 25
-#define PIN_ON 26
-
+// SD pins
 #define SD_CS 13
 #define SD_DT 14
 
@@ -89,7 +90,7 @@ char delim[2] = " "; // delimiter for parsing
 // 1: ISO 9141 (slow)
 // 2: KWP (fast 9141)
 // 3: CAN Bus
-uint8_t obdflag = 2;
+uint8_t obdflag = 1;
 
 unsigned long elapsedmillis = 0;
 unsigned long startmillis = 0;
@@ -277,24 +278,30 @@ void setup() {
   pinMode(PIN_ON, OUTPUT);
   pinMode(PIN_OFF, OUTPUT);
   pinMode(FONA_RST, OUTPUT);
-
+  pinMode(SD_CS, OUTPUT);
+  pinMode(SD_DT,INPUT);
+  
   obdflag = 2;	// HARDCODE FOR NOW
   SerialUSB.begin(115200);
   rtc.begin();
   
     // SD Card setup
-   SerialUSB.println(F("Initializing SD card..."));
- 
 
     // see if the card is present and can be initialized:
-    if (SD.begin(SD_CS)) {     
-      SerialUSB.println(F("SD card initialized"));
-      datafile = SD.open(filename, FILE_WRITE);
-      logopen = true;
+    if (digitalRead(SD_DT) == HIGH) {
+      SerialUSB.println(F("SD card not present"));
     }
     else {
-      SerialUSB.println(F("SD card failed, or not present"));
+      if (SD.begin(SD_CS)) {
+        SerialUSB.println(F("SD card initialized"));
+        datafile = SD.open(filename, FILE_WRITE);
+        logopen = true;
+      } 
+      else {
+        SerialUSB.println(F("SD card init Error"));
+      }
     }
+
   printlogln(F("\r\n\r\n**********************"));
   printlogln(F("*****  ECU GPS  ******"));
   
@@ -330,8 +337,12 @@ uint8_t EEPROMInit = 0;
    printlogln(EEPROMSave.adminpass);
    printlog("Relay status: ");
    printlogln(EEPROMSave.relay);
-  
 
+  printlogln(F("Clearing relay status"));
+      digitalWrite(PIN_OFF, LOW);
+      digitalWrite(PIN_ON, LOW);
+      delay(500);
+      
    if (EEPROMSave.relay) {
       printlogln(F("Checking power relay is ON"));
       digitalWrite(PIN_OFF, LOW);
@@ -412,7 +423,7 @@ uint8_t EEPROMInit = 0;
    
    startmillis = millis(); // discount setup time from delta.
    printlogln(F("*****  Init End  ******\r\n"));
-   datafile.close();
+   datafile.flush();
    logopen = false;
 }
 
@@ -442,22 +453,7 @@ void loop() {
 }
 
 void ReadOBD() {
-  datafile = SD.open(filename, FILE_WRITE);
-  if (datafile) {
-    logopen = true;
-  }
-  else {
-    SerialUSB.println(F("SD file open failed, try to init SD"));
-    // see if the card is present and can be initialized:
-    if (SD.begin(SD_CS)) {     
-      SerialUSB.println(F("SD card initialized"));
-      datafile = SD.open(filename, FILE_WRITE);
-      logopen = true;
-    }
-    else {
-      SerialUSB.println(F("SD card failed, or not present"));
-    }
-  } //if (datafile)
+  SDCheckOpen();
     
   elapsedmillis = millis() - startmillis; // uses startmillis from previous cycle
   startmillis = millis();
@@ -818,7 +814,7 @@ void ProcessSMS () {
 
   }
   printlogln(F("\r\n"));
-  datafile.close();
+  datafile.flush();
   logopen = false;
 } // ProcessSMS
 
@@ -840,13 +836,7 @@ void WriteEEPROM() {
 
 
 void HTTPPost() {
-      datafile = SD.open(filename, FILE_WRITE);
-      if (datafile) {
-        logopen = true;
-      }
-      else {
-        SerialUSB.println(F("SD file open failed, or not present"));
-      }
+      SDCheckOpen();
       printlogln(F("\r\n*****  HTTP POST  ******"));
 
       // get GPS location
@@ -1035,3 +1025,29 @@ byte valueFromString(char *string,byte start, byte width)
 }  
 // TO DO:
 // figure how to keep battery supply . no easy way with current circuit.
+
+void SDCheckOpen() { 
+  if (digitalRead(SD_DT) == HIGH) {
+      SerialUSB.println(F("SD card not present"));
+  }
+  else {
+    datafile = SD.open(filename, FILE_WRITE);
+
+    if (datafile) {
+       logopen = true;
+     }
+     else {
+       SerialUSB.println(F("SD file open failed, try to init SD"));
+       // see if the card is present and can be initialized:
+       if (SD.begin(SD_CS)) {     
+         SerialUSB.println(F("SD card initialized"));
+         datafile = SD.open(filename, FILE_WRITE);
+         logopen = true;
+       }
+       else {
+         SerialUSB.println(F("SD card failed!"));
+       }
+     } //if (datafile)
+    
+  }
+}
