@@ -1,4 +1,4 @@
-#include<stdio.h>
+  #include<stdio.h>
 
 #include "Adafruit_FONA.h"
 
@@ -62,9 +62,9 @@
 //////////
 
 // TO DO: implement a method to program these variables through SMS
-char deviceID[25] = "5d421ed6c86164002300c000";
-char ownerID[25] = "5d3b6bc8865a59002353aa8c";
-char serverurl[80] = "https://aire-nuevo.herokuapp.com/api/v1/stats";
+char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b";
+char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d";
+char serverurl[80] = "https://airenuevoapp.japuware.com/api/v1/stats";
 
 
 struct t  {
@@ -74,8 +74,8 @@ struct t  {
 
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
-t t_func2 = {0, 120000}; //Run every 2 minutes - HTTP POSTing
-t t_func3 = {0, 10000}; //Run every 10 seconds - SMS Process
+t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
+t t_func3 = {0, 30000}; //Run every 30 seconds - SMS Process
 
 // variables
 char replybuffer[255]; // this is a large buffer for replies
@@ -279,7 +279,8 @@ void printlogln (long unsigned int line) {
 ///////////////////////////////////////////////////////////////////////////
 void setup() {
   // put your setup code here, to run once:s
-  //while (!SerialUSB);
+//  while (!SerialUSB);
+  delay(8000);
   
   pinMode(PIN_ON, OUTPUT);
   pinMode(PIN_OFF, OUTPUT);
@@ -392,7 +393,14 @@ uint8_t EEPROMInit = 0;
   
      //configure HTTP gets to follow redirects over SSL
      fona.setHTTPSRedirect(true);
-  
+
+     //Turn on battery recharge option
+//     printlogln(F("Turning on battery charging"));
+//     if(fona.enableBattCharging())
+//        printlogln(F("Battery charging turned on"));
+//     else
+//        printlogln(F("Failed turning battery charging on"));
+
      // Turn on GPS
      if (!fona.enableGPS(true))
         printlogln(F("Failed to turn on GPS!"));
@@ -427,6 +435,9 @@ uint8_t EEPROMInit = 0;
    // Time from RTC
    rtctimestamp(timestamp);
    printlog(F("Current Time: ")); printlogln(timestamp);
+
+   fona.enableGPS(false);
+   printlogln(F("GPS Off"));
    
    startmillis = millis(); // discount setup time from delta.
    printlogln(F("*****  Init End  ******\r\n"));
@@ -785,7 +796,7 @@ void ProcessSMS () {
             }
             else {
                 char sms[140];
-                PString psms(sms,350);
+                PString psms(sms,140);
             
               if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
                   printlogln(F("Latitude: "));printlogln(lat);
@@ -842,12 +853,36 @@ void ProcessSMS () {
               }
             }
           }
+  		  // Ricardo 2 FEB 2020 - Include a command to read back battery voltage through SMS
+  		  if (strcmp(command,"BAT?") == 0) {
+              int i = strcmp(readpass, EEPROMSave.password);
+              if (i != 0) {
+                printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
+              }
+              else {
+        				uint16_t vbat;
+        				char sms[140];
+        				PString psms(sms,140);
+                        if (! fona.getBattVoltage(&vbat)) {
+        				  printlogln(F("Failed to read Batt"));
+        				} else {
+        					printlogln(F("VBat = ")); printlogln(vbat); printlogln(F(" mV"));
+        					psms.print("Battery Voltage (mV):");
+        					psms.print(vbat);
+        				}
+        				if (!fona.sendSMS(sender, sms)) {
+        					printlogln(F("ERROR could not send SMS"));
+        				} else {
+        					printlogln(F("SMS sent with Battery Voltage"));
+        				}
+  				
+  			      } // else
+          } // if (strcmp(command,"BAT?") == 0) 
 
-        }
 
 
-
-      }
+        } // fona.getSMSSender(smsid, replybuffer, 250)) {
+      } // if sms found
 
     } // if (smsnum > 0)
 
@@ -877,6 +912,8 @@ void HTTPPost() {
       printlogln(F("\r\n*****  HTTP POST  ******"));
 
       // get GPS location
+//      fona.enableGPS(true);
+//      delay(5000);
       
       if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
         
@@ -964,6 +1001,8 @@ void HTTPPost() {
          
             printlogln(data);
             success = false;
+            printlogln(F("POSTing data.."));
+            
             if (fona.HTTP_POST_start(serverurl, F("application/json"), (uint8_t *) data, strlen(pdata), &statuscode, (uint16_t *)&lengthp)) {
               success = true;
             }
@@ -984,6 +1023,7 @@ void HTTPPost() {
                   if (! lengthp) break;
                 }
               }
+              printlogln(F("POSTing success"));
               printlogln(F("\n\n****"));
               fona.HTTP_POST_end();
           
@@ -1018,6 +1058,7 @@ void HTTPPost() {
      
       datafile.close();
       logopen = false;
+//      fona.enableGPS(false);
 }
 
 
