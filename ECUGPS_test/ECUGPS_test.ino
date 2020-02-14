@@ -74,7 +74,7 @@ struct t  {
 
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
-t t_func2 = {0, 90000}; //Run every 15 minutes - HTTP POSTing
+t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
 t t_func3 = {0, 30000}; //Run every 30 seconds - SMS Process
 
 // variables
@@ -87,7 +87,7 @@ char readpass[9];
 char delim[2] = " "; // delimiter for parsing
 // obdflag
 // 0: Default (no system selected)
-// 1: ISO 9141 (slow) (Carlos)
+// 1: ISO 9141 (slow)
 // 2: KWP (fast 9141)
 // 3: CAN Bus
 // 4: SIMULATION
