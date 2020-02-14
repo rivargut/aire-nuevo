@@ -163,6 +163,8 @@ float fLPS = 0;
 float lat, lon, speedkph,heading, altitude;
 float lastlat,lastlon;  // to track last available coordinates
 char gpsdate[20];
+bool gpslock = false;  // Wait until first GPS lock to disable and sleep
+bool FonaSleep = false; // To track if FONA is asleep or not
 
 char data[350];
 PString pdata(data,350);
@@ -699,197 +701,218 @@ void ReadOBD() {
   
 
 void ProcessSMS () {
+  // Power mode ON
+  if (FonaSleep == true) {
+	  if (! fona.setPowerMode(1)) {
+		  printlogln(F("ERROR getting FONA out of sleep"));
+		  return;
+	  }
+	  else {
+		printlogln(F("FONA out of sleep OK"));
+		FonaSleep = false;
+	  }
+  }
+
+	
   // Read # of SMS, process them all
   uint16_t smslen;
   int8_t smsnum = fona.getNumSMS();
-
+  
   if (smsnum == 0) {
-    printlogln(F("No SMS received"));
+	printlogln(F("No SMS received"));
   }
   else if (smsnum < 0) {
-    printlogln(F("ERROR: Could not read # SMS"));
+	printlogln(F("ERROR: Could not read # SMS"));
   }
   else {
-    if (smsnum > 0) {
-      uint8_t smsid = 1;
-      bool smsfound = false;
-      while (!smsfound) {
-        if (! fona.readSMS(smsid, replybuffer, 250, &smslen)) { // Read message #1 pass in buffer and max len!
-          printlog("ERROR Failed readSMS #");printlogln(smsid);
-          smsid++;
-        }
-        else {
-          strcpy(message,replybuffer);
-          printlog("Reading SMS #");printlogln(smsid);
-          smsfound = true;
-        }
-      }
-      if (smsfound) {
-        
-        if (! fona.getSMSSender(smsid, replybuffer, 250)) {
-          printlogln("ERROR failed getSMSSender!");
-        }
-        else {
-          char sender[255];
-          strcpy(sender, replybuffer);
-          printlog(F("FROM: ")); printlogln(sender);
-          
-          if (fona.deleteSMS(smsid)) {
-            printlogln(F("Message is deleted OK!"));
-          } else {
-            printlogln(F("Couldn't delete SMS"));
-          }
-          printlog(F("***Message received: ")); printlogln(message);
-          char *ptr = strtok(message, delim);
-          sprintf(command, "%s", ptr);
-          printlog(F("***Command parsed: ")); printlogln(command);
-          ptr = strtok(NULL, delim);
-          sprintf(readpass, "%s", ptr);
-          printlog(F("***Password sent: ")); printlogln(readpass);
+	if (smsnum > 0) {
+	  uint8_t smsid = 1;
+	  bool smsfound = false;
+	  while (!smsfound) {
+		if (! fona.readSMS(smsid, replybuffer, 250, &smslen)) { // Read message #1 pass in buffer and max len!
+		  printlog("ERROR Failed readSMS #");printlogln(smsid);
+		  smsid++;
+		}
+		else {
+		  strcpy(message,replybuffer);
+		  printlog("Reading SMS #");printlogln(smsid);
+		  smsfound = true;
+		}
+	  }
+	  if (smsfound) {
+		
+		if (! fona.getSMSSender(smsid, replybuffer, 250)) {
+		  printlogln("ERROR failed getSMSSender!");
+		}
+		else {
+		  char sender[255];
+		  strcpy(sender, replybuffer);
+		  printlog(F("FROM: ")); printlogln(sender);
+		  
+		  if (fona.deleteSMS(smsid)) {
+			printlogln(F("Message is deleted OK!"));
+		  } else {
+			printlogln(F("Couldn't delete SMS"));
+		  }
+		  printlog(F("***Message received: ")); printlogln(message);
+		  char *ptr = strtok(message, delim);
+		  sprintf(command, "%s", ptr);
+		  printlog(F("***Command parsed: ")); printlogln(command);
+		  ptr = strtok(NULL, delim);
+		  sprintf(readpass, "%s", ptr);
+		  printlog(F("***Password sent: ")); printlogln(readpass);
 
-          if (strcmp(command,"PASS") == 0) {
-            int i = strcmp(readpass, EEPROMSave.password);
-            if (i != 0) {
-              printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
-            }
-            else {
-              printlogln(F("***Password sent is correct"));
-              if (ptr != NULL) {  // parse new password
-                ptr = strtok(NULL, delim);
-                sprintf(newpass, "%s", ptr);
-                printlog(F("***New password sent: ")); printlogln(newpass);
-                strcpy(EEPROMSave.password, newpass);
-                //WriteEEPROM();
-                if (!fona.sendSMS(sender, "New Password OK")) {
-                  printlogln(F("ERROR could not send SMS"));
-                } else {
-                  printlogln(F("SMS sent with password confirmation"));
-                }
-              }
-            }
-          }
-          if (strcmp(command,"ADMN") == 0) {
-            int i = strcmp(readpass, EEPROMSave.adminpass);
-            if (i != 0) {
-              printlogln(F("WARNING Admin Password sent is NOT correct.. bypassing action"));
-            }
-            else {
-              printlogln(F("***Admin Password sent is correct"));
-              if (ptr != NULL) {  // parse new password
-                ptr = strtok(NULL, delim);
-                sprintf(newpass, "%s", ptr);
-                printlog(F("***New password sent: ")); printlogln(newpass);
-                strcpy(EEPROMSave.adminpass, newpass);
-                //WriteEEPROM();
-                if (!fona.sendSMS(sender, "New Admin Password OK")) {
-                  printlogln(F("ERROR could not send SMS"));
-                } else {
-                  printlogln(F("SMS sent with password confirmation"));
-                }
-              }
-            }
-          }
-          if (strcmp(command,"GPS?") == 0) {
-            int i = strcmp(readpass, EEPROMSave.password);
-            if (i != 0) {
-              printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
-            }
-            else {
-                char sms[140];
-                PString psms(sms,140);
-            
-              if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
-                  printlogln(F("Latitude: "));printlogln(lat);
-                  printlogln(F("Longitude: "));printlogln(lon);      
-                  psms.print("GPS Location: https://www.google.com/maps/search/?api=1&query=");
-                  psms.print(lat,4);
-                  psms.print(",");
-                  psms.print(lon,4);
-              }
-              else {
-                psms.print("GPS Location not locked");
-              }
-              
-              if (!fona.sendSMS(sender, sms)) {
-                printlogln(F("ERROR could not send SMS"));
-              } else {
-                printlogln(F("SMS sent with GPS coordinates"));
-              }
-            }
-          }
-          if (strcmp(command,"SHUT") == 0) {
-            int i = strcmp(readpass, EEPROMSave.adminpass);
-            if (i != 0) {
-              printlogln(F("WARNING Admin Password sent is NOT correct.. bypassing action"));
-            }
-            else {
-              printlogln(F("***Admin Password sent is correct. Shutting down ECU"));
-              // disconnect ECU through relay
-              digitalWrite(PIN_ON, LOW);
-              digitalWrite(PIN_OFF, HIGH);
-              //WriteEEPROM();
-              if (!fona.sendSMS(sender, "LPG ECU Shut down OK")) {
-                printlogln(F("ERROR could not send SMS"));
-              } else {
-                printlogln(F("SMS sent for Shutdown"));
-              }
-            }
-          }
-          if (strcmp(command,"CONN") == 0) {
-            int i = strcmp(readpass, EEPROMSave.adminpass);
-            if (i != 0) {
-              printlogln(F("WARNING Admin Password sent is NOT correct.. bypassing action"));
-            }
-            else {
-              printlogln(F("***Admin Password sent is correct. Turning on ECU"));
-              // Connect ECU through relay
-              digitalWrite(PIN_OFF, LOW);
-              digitalWrite(PIN_ON, HIGH);
-              //WriteEEPROM();
-              if (!fona.sendSMS(sender, "LPG ECU Reconnect OK")) {
-                printlogln(F("ERROR could not send SMS"));
-              } else {
-                printlogln(F("SMS sent for Reconnect"));
-              }
-            }
-          }
-  		  // Ricardo 2 FEB 2020 - Include a command to read back battery voltage through SMS
-  		  if (strcmp(command,"BAT?") == 0) {
-              int i = strcmp(readpass, EEPROMSave.password);
-              if (i != 0) {
-                printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
-              }
-              else {
-        				uint16_t vbat;
-        				char sms[140];
-        				PString psms(sms,140);
-                        if (! fona.getBattVoltage(&vbat)) {
-        				  printlogln(F("Failed to read Batt"));
-        				} else {
-        					printlogln(F("VBat = ")); printlogln(vbat); printlogln(F(" mV"));
-        					psms.print("Battery Voltage (mV):");
-        					psms.print(vbat);
-        				}
-        				if (!fona.sendSMS(sender, sms)) {
-        					printlogln(F("ERROR could not send SMS"));
-        				} else {
-        					printlogln(F("SMS sent with Battery Voltage"));
-        				}
-  				
-  			      } // else
-          } // if (strcmp(command,"BAT?") == 0) 
+		  if (strcmp(command,"PASS") == 0) {
+			int i = strcmp(readpass, EEPROMSave.password);
+			if (i != 0) {
+			  printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
+			}
+			else {
+			  printlogln(F("***Password sent is correct"));
+			  if (ptr != NULL) {  // parse new password
+				ptr = strtok(NULL, delim);
+				sprintf(newpass, "%s", ptr);
+				printlog(F("***New password sent: ")); printlogln(newpass);
+				strcpy(EEPROMSave.password, newpass);
+				//WriteEEPROM();
+				if (!fona.sendSMS(sender, "New Password OK")) {
+				  printlogln(F("ERROR could not send SMS"));
+				} else {
+				  printlogln(F("SMS sent with password confirmation"));
+				}
+			  }
+			}
+		  }
+		  if (strcmp(command,"ADMN") == 0) {
+			int i = strcmp(readpass, EEPROMSave.adminpass);
+			if (i != 0) {
+			  printlogln(F("WARNING Admin Password sent is NOT correct.. bypassing action"));
+			}
+			else {
+			  printlogln(F("***Admin Password sent is correct"));
+			  if (ptr != NULL) {  // parse new password
+				ptr = strtok(NULL, delim);
+				sprintf(newpass, "%s", ptr);
+				printlog(F("***New password sent: ")); printlogln(newpass);
+				strcpy(EEPROMSave.adminpass, newpass);
+				//WriteEEPROM();
+				if (!fona.sendSMS(sender, "New Admin Password OK")) {
+				  printlogln(F("ERROR could not send SMS"));
+				} else {
+				  printlogln(F("SMS sent with password confirmation"));
+				}
+			  }
+			}
+		  }
+		  if (strcmp(command,"GPS?") == 0) {
+			int i = strcmp(readpass, EEPROMSave.password);
+			if (i != 0) {
+			  printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
+			}
+			else {
+				char sms[140];
+				PString psms(sms,140);
+			
+			  if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
+				  printlogln(F("Latitude: "));printlogln(lat);
+				  printlogln(F("Longitude: "));printlogln(lon);      
+				  psms.print("GPS Location: https://www.google.com/maps/search/?api=1&query=");
+				  psms.print(lat,4);
+				  psms.print(",");
+				  psms.print(lon,4);
+			  }
+			  else {
+				psms.print("GPS Location not locked");
+			  }
+			  
+			  if (!fona.sendSMS(sender, sms)) {
+				printlogln(F("ERROR could not send SMS"));
+			  } else {
+				printlogln(F("SMS sent with GPS coordinates"));
+			  }
+			}
+		  }
+		  if (strcmp(command,"SHUT") == 0) {
+			int i = strcmp(readpass, EEPROMSave.adminpass);
+			if (i != 0) {
+			  printlogln(F("WARNING Admin Password sent is NOT correct.. bypassing action"));
+			}
+			else {
+			  printlogln(F("***Admin Password sent is correct. Shutting down ECU"));
+			  // disconnect ECU through relay
+			  digitalWrite(PIN_ON, LOW);
+			  digitalWrite(PIN_OFF, HIGH);
+			  //WriteEEPROM();
+			  if (!fona.sendSMS(sender, "LPG ECU Shut down OK")) {
+				printlogln(F("ERROR could not send SMS"));
+			  } else {
+				printlogln(F("SMS sent for Shutdown"));
+			  }
+			}
+		  }
+		  if (strcmp(command,"CONN") == 0) {
+			int i = strcmp(readpass, EEPROMSave.adminpass);
+			if (i != 0) {
+			  printlogln(F("WARNING Admin Password sent is NOT correct.. bypassing action"));
+			}
+			else {
+			  printlogln(F("***Admin Password sent is correct. Turning on ECU"));
+			  // Connect ECU through relay
+			  digitalWrite(PIN_OFF, LOW);
+			  digitalWrite(PIN_ON, HIGH);
+			  //WriteEEPROM();
+			  if (!fona.sendSMS(sender, "LPG ECU Reconnect OK")) {
+				printlogln(F("ERROR could not send SMS"));
+			  } else {
+				printlogln(F("SMS sent for Reconnect"));
+			  }
+			}
+		  }
+		  // Ricardo 2 FEB 2020 - Include a command to read back battery voltage through SMS
+		  if (strcmp(command,"BAT?") == 0) {
+			  int i = strcmp(readpass, EEPROMSave.password);
+			  if (i != 0) {
+				printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
+			  }
+			  else {
+						uint16_t vbat;
+						char sms[140];
+						PString psms(sms,140);
+						if (! fona.getBattVoltage(&vbat)) {
+						  printlogln(F("Failed to read Batt"));
+						} else {
+							printlogln(F("VBat = ")); printlogln(vbat); printlogln(F(" mV"));
+							psms.print("Battery Voltage (mV):");
+							psms.print(vbat);
+						}
+						if (!fona.sendSMS(sender, sms)) {
+							printlogln(F("ERROR could not send SMS"));
+						} else {
+							printlogln(F("SMS sent with Battery Voltage"));
+						}
+				
+				  } // else
+		  } // if (strcmp(command,"BAT?") == 0) 
 
 
 
-        } // fona.getSMSSender(smsid, replybuffer, 250)) {
-      } // if sms found
+		} // fona.getSMSSender(smsid, replybuffer, 250)) {
+	  } // if sms found
 
-    } // if (smsnum > 0)
+	} // if (smsnum > 0)
 
   }
   printlogln(F("\r\n"));
   datafile.flush();
   logopen = false;
+  if (! fona.setPowerMode(0)) {
+	printlogln(F("ERROR getting FONA to sleep!"));
+  }
+  else{
+	  FonaSleep = true;
+	  printlogln(F("FONA set to sleep OK"));
+  }
+	
 } // ProcessSMS
 
 /*
@@ -934,7 +957,17 @@ void HTTPPost() {
       // get GPS location
 //      fona.enableGPS(true);
 //      delay(5000);
-      
+      if (FonaSleep == true) {
+		  if (! fona.setPowerMode(1)) {
+			  printlogln(F("ERROR getting FONA out of sleep"));
+			  return;
+		  }
+		  else {
+			printlogln(F("FONA out of sleep OK"));
+			FonaSleep = false;
+		  }
+	  }
+	  
       if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
         
         printlog(F("Latitude: "));printlogln(lat);
@@ -1079,6 +1112,13 @@ void HTTPPost() {
       datafile.close();
       logopen = false;
 //      fona.enableGPS(false);
+	if (! fona.setPowerMode(0)) {
+		printlogln(F("ERROR getting FONA to sleep!"));
+	}
+	else{
+	  FonaSleep = true;
+	  printlogln(F("FONA set to sleep OK"));
+	}
 }
 
 
