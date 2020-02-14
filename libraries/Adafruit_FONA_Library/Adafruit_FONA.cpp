@@ -190,6 +190,12 @@ boolean Adafruit_FONA::getADCVoltage(uint16_t *v) {
   return sendParseReply(F("AT+CADC?"), F("+CADC: 1,"), v);
 }
 
+// Ricardo - added to manage power mode (see hardware guide p.27) 
+
+boolean Adafruit_FONA::setPowerMode(uint8_t i) {
+  return sendCheckReply(F("AT+CFUN="), i, ok_reply));
+}
+
 /********* SIM ***********************************************************/
 
 uint8_t Adafruit_FONA::unlockSIM(char *pin)
