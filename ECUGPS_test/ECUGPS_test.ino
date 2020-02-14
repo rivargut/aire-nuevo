@@ -74,7 +74,7 @@ struct t  {
 
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
-t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
+t t_func2 = {0, 90000}; //Run every 15 minutes - HTTP POSTing
 t t_func3 = {0, 30000}; //Run every 30 seconds - SMS Process
 
 // variables
@@ -87,7 +87,7 @@ char readpass[9];
 char delim[2] = " "; // delimiter for parsing
 // obdflag
 // 0: Default (no system selected)
-// 1: ISO 9141 (slow)
+// 1: ISO 9141 (slow) (Carlos)
 // 2: KWP (fast 9141)
 // 3: CAN Bus
 // 4: SIMULATION
@@ -395,11 +395,11 @@ uint8_t EEPROMInit = 0;
      fona.setHTTPSRedirect(true);
 
      //Turn on battery recharge option
-//     printlogln(F("Turning on battery charging"));
-//     if(fona.enableBattCharging())
-//        printlogln(F("Battery charging turned on"));
-//     else
-//        printlogln(F("Failed turning battery charging on"));
+     printlogln(F("Turning on battery charging"));
+     if(fona.enableBattCharging())
+        printlogln(F("Battery charging turned on"));
+     else
+        printlogln(F("Failed turning battery charging on"));
 
      // Turn on GPS
      if (!fona.enableGPS(true))
@@ -436,8 +436,8 @@ uint8_t EEPROMInit = 0;
    rtctimestamp(timestamp);
    printlog(F("Current Time: ")); printlogln(timestamp);
 
-   fona.enableGPS(false);
-   printlogln(F("GPS Off"));
+//   fona.enableGPS(false);
+//   printlogln(F("GPS Off"));
    
    startmillis = millis(); // discount setup time from delta.
    printlogln(F("*****  Init End  ******\r\n"));
@@ -910,6 +910,26 @@ void WriteEEPROM() {
 void HTTPPost() {
       SDCheckOpen();
       printlogln(F("\r\n*****  HTTP POST  ******"));
+
+      uint16_t batt; //Battery reports
+      if (fona.getADCVoltage(&batt))
+      {
+        printlog("Car Battery Voltage: ");
+        printlog(batt);
+        printlogln(" mV");
+      }
+      if (fona.getBattPercent(&batt))
+      {
+        printlog("Emergency Battery Percent: ");
+        printlog(batt);
+        printlogln(" %");
+      }
+      if (fona.getBattVoltage(&batt))
+      {
+        printlog("Emergency Battery Voltage: ");
+        printlog(batt);
+        printlogln(" mV");
+      } //Battery reports
 
       // get GPS location
 //      fona.enableGPS(true);
