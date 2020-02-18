@@ -1,6 +1,8 @@
 /***************************************************
   This is a library for our Adafruit FONA Cellular Module
 
+
+
   Designed specifically to work with the Adafruit FONA
   ----> http://www.adafruit.com/products/1946
   ----> http://www.adafruit.com/products/1963
@@ -58,7 +60,7 @@ boolean Adafruit_FONA::begin(Stream &port) {
 
   DEBUG_PRINTLN(F("Attempting to open comm with ATs"));
   // give 20 seconds to reboot
-  int16_t timeout = 20000;
+  int16_t timeout = 30000;
 
   while (timeout > 0) {
     while (mySerial->available()) mySerial->read();
@@ -190,10 +192,15 @@ boolean Adafruit_FONA::getADCVoltage(uint16_t *v) {
   return sendParseReply(F("AT+CADC?"), F("+CADC: 1,"), v);
 }
 
+//Function added by Daniel Castro
+boolean Adafruit_FONA::enableBattCharging(void) {
+  return sendCheckReply(F("AT+echarge=1"), ok_reply);
+}
+
 // Ricardo - added to manage power mode (see hardware guide p.27) 
 
 boolean Adafruit_FONA::setPowerMode(uint8_t i) {
-  return sendCheckReply(F("AT+CFUN="), i, ok_reply));
+  return sendCheckReply(F("AT+CFUN="), i, ok_reply,5000);
 }
 
 /********* SIM ***********************************************************/
@@ -737,7 +744,6 @@ boolean Adafruit_FONA::enableGPS(boolean onoff) {
   uint16_t state;
 
   // first check if its already on or off
-
   if (_type == FONA808_V2) {
     if (! sendParseReply(F("AT+CGNSPWR?"), F("+CGNSPWR: "), &state) )
       return false;
@@ -1687,7 +1693,7 @@ boolean Adafruit_FONA::HTTP_POST_start(char *url,
   }
 
   // HTTP POST data
-  if (! HTTP_data(postdatalen, 10000))
+  if (! HTTP_data(postdatalen, 50000))
     return false;
   mySerial->write(postdata, postdatalen);
   if (! expectReply(ok_reply))
@@ -1695,14 +1701,20 @@ boolean Adafruit_FONA::HTTP_POST_start(char *url,
 
   // HTTP POST
   if (! HTTP_action(FONA_HTTP_POST, status, datalen))
+  {
+    DEBUG_PRINT (F("\tError al enviar httppost"));
     return false;
+  }
 
   DEBUG_PRINT(F("Status: ")); DEBUG_PRINTLN(*status);
   DEBUG_PRINT(F("Len: ")); DEBUG_PRINTLN(*datalen);
 
   // HTTP response data
   if (! HTTP_readall(datalen))
+  {
+    DEBUG_PRINT (F("\tHttppost enviado, pero se recibió un error. "));
     return false;
+  }
 
   return true;
 }
@@ -1853,6 +1865,8 @@ uint8_t Adafruit_FONA::getReply(char *send, uint16_t timeout) {
   mySerial->println(send);
 
   uint8_t l = readline(timeout);
+
+  DEBUG_PRINT (F("\tRespuesta: "));
 
   DEBUG_PRINT (F("\t<--- ")); DEBUG_PRINTLN(replybuffer);
 
