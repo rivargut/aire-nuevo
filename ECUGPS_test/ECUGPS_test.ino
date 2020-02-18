@@ -1039,6 +1039,10 @@ void HTTPPost() {
             pdata.print(fAvgGasLPH);
             pdata.print(",\"petrolKml\":");
             pdata.print(fAvgGasKPL);
+			pdata.print(",\"lgpL\":");
+            pdata.print(fGasLiters);
+			pdata.print(",\"petrolL\":");
+            pdata.print(fLPGLiters);
             pdata.print(",\"owner\":\"");
             pdata.print(ownerID);
             pdata.print("\",\"latitude\":");
