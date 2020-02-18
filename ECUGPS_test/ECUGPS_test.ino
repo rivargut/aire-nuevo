@@ -58,7 +58,6 @@
 #define _32BITS 4
 
 #define UTC -6
-
 //////////
 
 // TO DO: implement a method to program these variables through SMS
@@ -75,7 +74,7 @@ struct t  {
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
 t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
-t t_func3 = {0, 30000}; //Run every 30 seconds - SMS Process
+t t_func3 = {0, 300000}; //Run every 5 minutes - SMS Process
 
 // variables
 char replybuffer[255]; // this is a large buffer for replies
@@ -91,7 +90,7 @@ char delim[2] = " "; // delimiter for parsing
 // 2: KWP (fast 9141)
 // 3: CAN Bus
 // 4: SIMULATION
-uint8_t obdflag = 4;
+uint8_t obdflag = 1;
 
 unsigned long elapsedmillis = 0;
 unsigned long startmillis = 0;
@@ -157,7 +156,7 @@ float fSumLPGKPL = 0;
 float nSamples = 0;
 float fGasLiters = 0;
 float fLPGLiters = 0;
-float fLPS = 0;
+// Ricardo - eliminated the Liters per Second metric
 
 // GPS variables
 float lat, lon, speedkph,heading, altitude;
@@ -631,24 +630,22 @@ void ReadOBD() {
     if (bFuelType) {
       // LPG
       fLPH = (fAir * SecPerHour) / (fLPGLambda * fLPGDens);
-      fKPL = fSpeed / fLPH;
       if (fLPH != 0 ) {
         fKPL = fSpeed / fLPH;
       }
       else {
         fKPL = 0;
       }
-      fLPS = fAir / (fLPGLambda * fLPGDens);
+
       fSumLPGLPH = fSumLPGLPH + fLPH;
       fSumLPGKPL = fSumLPGKPL + fKPL;
       fAvgLPGLPH = fSumLPGLPH / nSamples;
       fAvgLPGKPL = fSumLPGKPL / nSamples;
-      fLPGTime += (float)elapsedmillis/1000; // elapsed time in seconds
-      fLPGLiters += fLPS * fLPGTime;
+      fLPGTime += (float)elapsedmillis/3600000; // elapsed time in hours, changed by Ricardo 14/2/20
+      fLPGLiters += fLPH * (float)elapsedmillis/3600000;
     } 
     else {
       // Gasoline
-      fLPS = fAir / (fGasLambda * fGasDens);
       fLPH = (fAir * SecPerHour) / (fGasLambda * fGasDens);
       if (fLPH != 0 ) {
         fKPL = fSpeed / fLPH;
@@ -660,8 +657,8 @@ void ReadOBD() {
       fSumGasKPL = fSumGasKPL + fKPL;
       fAvgGasLPH = fSumGasLPH / nSamples;
       fAvgGasKPL = fSumGasKPL / nSamples;
-      fGasTime += (float)elapsedmillis/1000; // elapsed time in seconds
-      fGasLiters += fLPS * fGasTime;
+      fGasTime += (float)elapsedmillis/3600000; // elapsed time in hours, changed by Ricardo 14/2/20
+      fGasLiters += fLPH * (float)elapsedmillis/3600000;
     }
     fGasPerc = 100* fGasTime / (fGasTime + fLPGTime);
     fLPGPerc = 100* fLPGTime / (fGasTime + fLPGTime);
@@ -672,8 +669,6 @@ void ReadOBD() {
     printlog(fLPH);
     printlog(", KM/Liter: ");
     printlog(fKPL);
-    printlog(", Fuel LPS: ");
-    printlogln(fLPS); 
     printlog("Gasoline time: ");
     printlogln(fGasTime);
     printlog("LPG Time: ");
@@ -702,16 +697,16 @@ void ReadOBD() {
 
 void ProcessSMS () {
   // Power mode ON
-  if (FonaSleep == true) {
 	  if (! fona.setPowerMode(1)) {
 		  printlogln(F("ERROR getting FONA out of sleep"));
-		  return;
+		  delay(2000);
 	  }
 	  else {
 		printlogln(F("FONA out of sleep OK"));
-		FonaSleep = false;
 	  }
-  }
+
+   printlogln(F("20 seconds Delay before reading SMS"));
+   delay(30000);
 
 	
   // Read # of SMS, process them all
@@ -909,7 +904,7 @@ void ProcessSMS () {
 	printlogln(F("ERROR getting FONA to sleep!"));
   }
   else{
-	  FonaSleep = true;
+	  
 	  printlogln(F("FONA set to sleep OK"));
   }
 	
@@ -957,17 +952,17 @@ void HTTPPost() {
       // get GPS location
 //      fona.enableGPS(true);
 //      delay(5000);
-      if (FonaSleep == true) {
 		  if (! fona.setPowerMode(1)) {
 			  printlogln(F("ERROR getting FONA out of sleep"));
-			  return;
+			  delay(2000);
 		  }
 		  else {
 			printlogln(F("FONA out of sleep OK"));
-			FonaSleep = false;
 		  }
-	  }
-	  
+     
+       printlogln(F("DELAY 30 seconds before transmit"));
+       delay(30000);
+      
       if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
         
         printlog(F("Latitude: "));printlogln(lat);
@@ -1097,7 +1092,6 @@ void HTTPPost() {
               elapsedmillis = 0;
               fGasLiters = 0;
               fLPGLiters = 0;
-              fLPS = 0;
     
             
           } // HTTP POST 
@@ -1116,7 +1110,6 @@ void HTTPPost() {
 		printlogln(F("ERROR getting FONA to sleep!"));
 	}
 	else{
-	  FonaSleep = true;
 	  printlogln(F("FONA set to sleep OK"));
 	}
 }
