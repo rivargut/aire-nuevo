@@ -1,4 +1,4 @@
-  #include<stdio.h>
+#include<stdio.h>
 
 #include "Adafruit_FONA.h"
 
@@ -90,7 +90,7 @@ char delim[2] = " "; // delimiter for parsing
 // 2: KWP (fast 9141)
 // 3: CAN Bus
 // 4: SIMULATION
-uint8_t obdflag = 1;
+uint8_t obdflag = 4;
 
 unsigned long elapsedmillis = 0;
 unsigned long startmillis = 0;
@@ -1039,12 +1039,12 @@ void HTTPPost() {
             pdata.print(fAvgGasLPH);
             pdata.print(",\"petrolKml\":");
             pdata.print(fAvgGasKPL);
-			pdata.print(",\"lgpL\":");
-            pdata.print(fGasLiters);
-			pdata.print(",\"petrolL\":");
-            pdata.print(fLPGLiters);
             pdata.print(",\"owner\":\"");
             pdata.print(ownerID);
+			pdata.print("\",\"lgpL\":\"");
+            pdata.print(fLPGLiters);
+			pdata.print("\",\"petrolL\":\"");
+            pdata.print(fGasLiters);
             pdata.print("\",\"latitude\":");
             pdata.print(lastlat,4);
             pdata.print(",\"longitude\":");
