@@ -70,7 +70,8 @@
 class Adafruit_FONA : public FONAStreamType {
  public:
   Adafruit_FONA(int8_t r);
-  boolean begin(FONAStreamType &port);
+  boolean initPort(FONAStreamType &port);
+  boolean begin(void);
   uint8_t type();
 
 
@@ -92,7 +93,7 @@ class Adafruit_FONA : public FONAStreamType {
   boolean getADCVoltage(uint16_t *v);
   boolean getBattPercent(uint16_t *p);
   boolean getBattVoltage(uint16_t *v);
-  boolean enableBattCharging(void);
+  boolean enableBattCharging(uint8_t i);
   boolean setPowerMode(uint8_t i);
 
   // SIM query

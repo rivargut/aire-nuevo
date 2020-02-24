@@ -48,8 +48,12 @@ uint8_t Adafruit_FONA::type(void) {
   return _type;
 }
 
-boolean Adafruit_FONA::begin(Stream &port) {
+boolean Adafruit_FONA::initPort(Stream &port) {
   mySerial = &port;
+  
+}
+
+boolean Adafruit_FONA::begin(void) {
   DEBUG_PRINTLN(F("Resetting SIM808.."));
   pinMode(_rstpin, OUTPUT);
   digitalWrite(_rstpin, HIGH);
@@ -193,8 +197,9 @@ boolean Adafruit_FONA::getADCVoltage(uint16_t *v) {
 }
 
 //Function added by Daniel Castro
-boolean Adafruit_FONA::enableBattCharging(void) {
-  return sendCheckReply(F("AT+echarge=1"), ok_reply);
+boolean Adafruit_FONA::enableBattCharging(uint8_t i) {
+  sendCheckReply(F("AT+echarge="), i,ok_reply);
+  sendCheckReply(F("AT&W"),ok_reply); // Ricardo 23 Feb - saving the profile and rebooting makes effective the charging mode
 }
 
 // Ricardo - added to manage power mode (see hardware guide p.27) 
