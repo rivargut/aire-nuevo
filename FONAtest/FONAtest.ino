@@ -54,6 +54,8 @@ uint8_t readline(char *buff, uint8_t maxbuff, uint16_t timeout = 0);
 
 uint8_t type;
 
+bool pwrstate = false;
+
 void setup() {
   while (!SerialUSB);
 
@@ -69,14 +71,16 @@ void setup() {
   delay(1000);
   digitalWrite(FONA_PWRKEY, HIGH);
   
-  fonaSerial->begin(4800);
-  if (! fona.begin(*fonaSerial)) {
+  fonaSerial->begin(19200);
+  fona.initPort(*fonaSerial);
+  if (! fona.begin()) {
     SerialUSB.println(F("Couldn't find FONA"));
     while (1);
   }
   type = fona.type();
   SerialUSB.println(F("FONA is OK"));
   SerialUSB.print(F("Found "));
+  pwrstate = true;
   switch (type) {
     case FONA800L:
       SerialUSB.println(F("FONA 800L")); break;
@@ -101,17 +105,11 @@ void setup() {
     SerialUSB.print("Module IMEI: "); SerialUSB.println(imei);
   }
 
-  // Optionally configure a GPRS APN, username, and password.
-  // You might need to do this to access your network's GPRS/data
-  // network.  Contact your provider for the exact APN, username,
-  // and password values.  Username and password are optional and
-  // can be removed, but APN is required.
-  //fona.setGPRSNetworkSettings(F("your APN"), F("your username"), F("your password"));
+   // Configure a GPRS APN, username, and password.
+   fona.setGPRSNetworkSettings(F("internet.movistar.cr"), F("movistarcr"), F("movistarcr"));
 
-  // Optionally configure HTTP gets to follow redirects over SSL.
-  // Default is not to follow SSL redirects, however if you uncomment
-  // the following line then redirects over SSL will be followed.
-  //fona.setHTTPSRedirect(true);
+   //configure HTTP gets to follow redirects over SSL
+   fona.setHTTPSRedirect(true);
 
   printMenu();
 }
@@ -140,10 +138,9 @@ void printMenu(void) {
   SerialUSB.println(F("[q] get FM station signal level (FONA800)"));
 
   // Phone
-  SerialUSB.println(F("[c] make phone Call"));
+
   SerialUSB.println(F("[A] get call status"));
   SerialUSB.println(F("[h] Hang up phone"));
-  SerialUSB.println(F("[p] Pick up phone"));
 
   // SMS
   SerialUSB.println(F("[N] Number of SMSs"));
@@ -179,6 +176,10 @@ void printMenu(void) {
   SerialUSB.println(F("[S] create Serial passthru tunnel"));
   SerialUSB.println(F("-------------------------------------"));
   SerialUSB.println(F(""));
+
+  SerialUSB.println(F("[c] enable/disable battery charging"));
+  SerialUSB.println(F("[p] set power mode"));
+  SerialUSB.println(F("[z] toggle PWR"));
 
 }
 void loop() {
@@ -435,7 +436,42 @@ void loop() {
         break;
       }
 
-    /*** Call ***/
+    case 'c': {
+      // Battery charging
+     
+       
+        flushSerial();
+        SerialUSB.println(F("Enter 0 to disable, 1 to enable"));
+        uint8_t batt = readnumber();
+        SerialUSB.println(batt);
+        if (! fona.enableBattCharging(batt)) {
+          SerialUSB.println(F("Failed"));
+        } else {
+          SerialUSB.println(F("OK!"));
+        }
+        break;
+    }
+
+    case 'p': {
+      // Set Power Mode
+        flushSerial();
+        SerialUSB.print(F("Set Power Mode 1"));
+        uint8_t powermode = readnumber();
+        SerialUSB.print(F("\n\rPower Mode ")); SerialUSB.println(powermode);
+
+        // Retrieve SMS sender address/phone number.
+        if (! fona.setPowerMode(powermode)) {
+          SerialUSB.println(F("Failed!"));
+          
+        }
+        else {
+          SerialUSB.println(F("OK!"));
+        }
+        break;
+
+    }
+/*
+    /*** Call **
     case 'c': {
         // call a phone!
         char number[30];
@@ -484,7 +520,7 @@ void loop() {
         }
         break;
       }
-
+*/
     /*** SMS ***/
 
     case 'N': {
@@ -764,20 +800,21 @@ void loop() {
         // Post data to website
         uint16_t statuscode;
         int16_t length;
-        char url[80];
-        char data[80];
 
-        flushSerial();
-        SerialUSB.println(F("NOTE: in beta! Use simple websites to post!"));
-        SerialUSB.println(F("URL to post (e.g. httpbin.org/post):"));
-        SerialUSB.print(F("http://")); readline(url, 79);
+        // turn GPRS on
+        if (!fona.enableGPRS(true))
+          SerialUSB.println(F("Failed to turn on"));
+        
+        
+        char url[80] = "https://aire-nuevo.herokuapp.com/api/v1/stats";
         SerialUSB.println(url);
         SerialUSB.println(F("Data to post (e.g. \"foo\" or \"{\"simple\":\"json\"}\"):"));
-        readline(data, 79);
+        char data[350] = "{\"datetime\":\"2016-01-06 18:03:26\",\"device\":\"5d421ed6c86164002300c000\",\"lgpTime\":115.38,\"lgpPercentage\":51.96,\"lgpLh\":2.70,\"lgpKml\":15.43,\"petrolTime\":106.67,\"petrolPercentage\":48.04,\"petrolLh\":1.64,\"petrolKml\":28.83,\"owner\":\"5d3b6bc8865a59002353aa8c\",\"latitude\":0.0000,\"longitude\":0.0000}";
+
         SerialUSB.println(data);
 
         SerialUSB.println(F("****"));
-        if (!fona.HTTP_POST_start(url, F("text/plain"), (uint8_t *) data, strlen(data), &statuscode, (uint16_t *)&length)) {
+        if (!fona.HTTP_POST_start(url, F("application/json"), (uint8_t *) data, strlen(data), &statuscode, (uint16_t *)&length)) {
           SerialUSB.println("Failed!");
           break;
         }
@@ -815,6 +852,33 @@ void loop() {
         }
         break;
       }
+
+    case 'z': {
+        SerialUSB.println(F("Toggle PWR State"));
+        if (pwrstate == false) {
+          pwrstate = true;
+          SerialUSB.println(F("Initializing....(May take 3 seconds)"));
+          SerialUSB.println(F("PWR KEY Toggle"));
+          digitalWrite(FONA_PWRKEY, HIGH);
+          delay(100);
+          digitalWrite(FONA_PWRKEY, LOW);
+          delay(1000);
+          digitalWrite(FONA_PWRKEY, HIGH);
+          
+          if (! fona.begin()) {
+            SerialUSB.println(F("Couldn't find FONA"));
+          }
+        }
+        else {
+           SerialUSB.println(F("Shutting down FONA"));
+           digitalWrite(FONA_PWRKEY, LOW);
+           delay(1500);
+           digitalWrite(FONA_PWRKEY, HIGH);
+           pwrstate = false;
+        }
+        break;
+  
+    }
 
     default: {
         SerialUSB.println(F("Unknown command"));
