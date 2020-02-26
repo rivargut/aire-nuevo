@@ -61,8 +61,9 @@
 //////////
 
 // TO DO: implement a method to program these variables through SMS
-char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b";
-char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d";
+char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Daniel 2. de daescastros
+//Carro de Carlos  char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b"; //Daniel Castro. de daescastros
+char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d"; //daescastros
 char serverurl[80] = "https://airenuevoapp.japuware.com/api/v1/stats";
 
 
@@ -73,8 +74,8 @@ struct t  {
 
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
-t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
-t t_func3 = {0, 300000}; //Run every 5 minutes - SMS Process
+t t_func2 = {0, 300000}; //Run every 5 minutes - HTTP POSTing
+t t_func3 = {0, 180000}; //Run every 2 minutes - SMS Process
 
 // variables
 char replybuffer[255]; // this is a large buffer for replies
@@ -281,6 +282,7 @@ void printlogln (long unsigned int line) {
 void setup() {
   // put your setup code here, to run once:s
 //  while (!SerialUSB);
+  printlogln("Wait 8 seconds to begin\n");
   delay(8000);
   
   pinMode(PIN_ON, OUTPUT);
@@ -373,40 +375,64 @@ uint8_t EEPROMInit = 0;
   
   // TO DO: change fona serial baud rate to 115200 as default
    fonaSerial->begin(4800);
-   if (! fona.begin(*fonaSerial)) {
+   fona.initPort(*fonaSerial);
+   if (! fona.begin()) {
      printlogln(F("Couldn't find FONA"));
    }
    else {
      type = fona.type();
      printlogln(F("FONA is found OK"));
-  
-     // Print module IMEI number.
-     char imei[16] = {0}; // MUST use a 16 character buffer for IMEI!
-     uint8_t imeiLen = fona.getIMEI(imei);
-     if (imeiLen > 0) {
-        printlog(F("Module IMEI: ")); printlogln(imei);
-     }
-     fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
-     printlog(F("SIM CCID = ")); printlogln(replybuffer);
-     
-     // Configure a GPRS APN, username, and password.
-     fona.setGPRSNetworkSettings(F("internet.movistar.cr"), F("movistarcr"), F("movistarcr"));
-  
-     //configure HTTP gets to follow redirects over SSL
-     fona.setHTTPSRedirect(true);
-
-     //Turn on battery recharge option
+	 
+	 //Turn on battery recharge option
      printlogln(F("Turning on battery charging"));
-     if(fona.enableBattCharging())
-        printlogln(F("Battery charging turned on"));
+     if(!fona.enableBattCharging(1))
+		 printlogln(F("Failed turning battery charging on"));
      else
-        printlogln(F("Failed turning battery charging on"));
+	 {
+         printlogln(F("Battery charging turned on"));
+		 //Restarting FONA 
+		 SerialUSB.println(F("Shutting down FONA"));
+	     digitalWrite(FONA_PWRKEY, LOW);
+	     delay(1500);
+	     digitalWrite(FONA_PWRKEY, HIGH);
+		 SerialUSB.println(F("Wait 2 seconds to start"));
+		 delay(2000);
+		 SerialUSB.println(F("Initializing....(May take 3 seconds)"));
+         SerialUSB.println(F("PWR KEY Toggle"));
+         digitalWrite(FONA_PWRKEY, HIGH);
+         delay(100);
+         digitalWrite(FONA_PWRKEY, LOW);
+         delay(1000);
+         digitalWrite(FONA_PWRKEY, HIGH);
+		 if (! fona.begin()) {
+			 printlogln(F("Couldn't find FONA"));
+		 }
+	     else {
+			 printlogln(F("FONA is found OK"));
+	 
+			 // Print module IMEI number.
+			 char imei[16] = {0}; // MUST use a 16 character buffer for IMEI!
+			 uint8_t imeiLen = fona.getIMEI(imei);
+			 if (imeiLen > 0) {
+				printlog(F("Module IMEI: ")); printlogln(imei);
+			 }
+			 fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
+			 printlog(F("SIM CCID = ")); printlogln(replybuffer);
+			 
+			 // Configure a GPRS APN, username, and password.
+			 fona.setGPRSNetworkSettings(F("internet.movistar.cr"), F("movistarcr"), F("movistarcr"));
+		  
+			 //configure HTTP gets to follow redirects over SSL
+			 fona.setHTTPSRedirect(true);
 
-     // Turn on GPS
-     if (!fona.enableGPS(true))
-        printlogln(F("Failed to turn on GPS!"));
-     else
-        printlogln(F("GPS Enabled"));
+			 // Turn on GPS
+			 if (!fona.enableGPS(true))
+				printlogln(F("Failed to turn on GPS!"));
+			 else
+				printlogln(F("GPS Enabled"));
+		
+		 }
+	 }
    }
 
    printlogln(F("Wait 2 seconds to start main loop..."));
@@ -697,16 +723,16 @@ void ReadOBD() {
 
 void ProcessSMS () {
   // Power mode ON
-	  if (! fona.setPowerMode(1)) {
-		  printlogln(F("ERROR getting FONA out of sleep"));
-		  delay(2000);
-	  }
-	  else {
-		printlogln(F("FONA out of sleep OK"));
-	  }
-
-   printlogln(F("20 seconds Delay before reading SMS"));
-   delay(30000);
+//	  if (! fona.setPowerMode(1)) {
+//		  printlogln(F("ERROR getting FONA out of sleep"));
+//		  delay(2000);
+//	  }
+//	  else {
+//		printlogln(F("FONA out of sleep OK"));
+//	  }
+//
+//   printlogln(F("20 seconds Delay before reading SMS"));
+//   delay(30000);
 
 	
   // Read # of SMS, process them all
@@ -900,13 +926,13 @@ void ProcessSMS () {
   printlogln(F("\r\n"));
   datafile.flush();
   logopen = false;
-  if (! fona.setPowerMode(0)) {
-	printlogln(F("ERROR getting FONA to sleep!"));
-  }
-  else{
-	  
-	  printlogln(F("FONA set to sleep OK"));
-  }
+//  if (! fona.setPowerMode(0)) {
+//	printlogln(F("ERROR getting FONA to sleep!"));
+//  }
+//  else{
+//	  
+//	  printlogln(F("FONA set to sleep OK"));
+//  }
 	
 } // ProcessSMS
 
@@ -952,16 +978,16 @@ void HTTPPost() {
       // get GPS location
 //      fona.enableGPS(true);
 //      delay(5000);
-		  if (! fona.setPowerMode(1)) {
-			  printlogln(F("ERROR getting FONA out of sleep"));
-			  delay(2000);
-		  }
-		  else {
-			printlogln(F("FONA out of sleep OK"));
-		  }
-     
-       printlogln(F("DELAY 30 seconds before transmit"));
-       delay(30000);
+//		  if (! fona.setPowerMode(1)) {
+//			  printlogln(F("ERROR getting FONA out of sleep"));
+//			  delay(2000);
+//		  }
+//		  else {
+//			printlogln(F("FONA out of sleep OK"));
+//		  }
+//     
+//       printlogln(F("DELAY 30 seconds before transmit"));
+//       delay(30000);
       
       if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
         
@@ -1110,12 +1136,12 @@ void HTTPPost() {
       datafile.close();
       logopen = false;
 //      fona.enableGPS(false);
-	if (! fona.setPowerMode(0)) {
-		printlogln(F("ERROR getting FONA to sleep!"));
-	}
-	else{
-	  printlogln(F("FONA set to sleep OK"));
-	}
+//	if (! fona.setPowerMode(0)) {
+//		printlogln(F("ERROR getting FONA to sleep!"));
+//	}
+//	else{
+//	  printlogln(F("FONA set to sleep OK"));
+//	}
 }
 
 
