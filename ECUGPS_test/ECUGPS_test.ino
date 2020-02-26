@@ -61,8 +61,7 @@
 //////////
 
 // TO DO: implement a method to program these variables through SMS
-char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Daniel 2. de daescastros
-//Carro de Carlos  char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b"; //Daniel Castro. de daescastros
+char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Dispositivo 1
 char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d"; //daescastros
 char serverurl[80] = "https://airenuevoapp.japuware.com/api/v1/stats";
 
@@ -956,24 +955,18 @@ void HTTPPost() {
       printlogln(F("\r\n*****  HTTP POST  ******"));
 
       uint16_t batt; //Battery reports
-      if (fona.getADCVoltage(&batt))
-      {
-        printlog("Car Battery Voltage: ");
-        printlog(batt);
-        printlogln(" mV");
-      }
-      if (fona.getBattPercent(&batt))
-      {
-        printlog("Emergency Battery Percent: ");
-        printlog(batt);
-        printlogln(" %");
-      }
-      if (fona.getBattVoltage(&batt))
-      {
-        printlog("Emergency Battery Voltage: ");
-        printlog(batt);
-        printlogln(" mV");
-      } //Battery reports
+        if (! fona.getBattVoltage(&batt)) {
+          printlogln(F("Failed to read Batt"));
+        } else {
+          printlog("VBat = "); printlog(batt); printlogln(" mV");
+        }
+
+
+        if (! fona.getBattPercent(&batt)) {
+          printlogln("Failed to read Batt");
+        } else {
+          printlog("VPct = "); printlog(batt); printlogln("%");
+        } //Battery reports
 
       // get GPS location
 //      fona.enableGPS(true);
