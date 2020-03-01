@@ -171,6 +171,9 @@ char data[350];
 PString pdata(data,350);
 bool success = false;
 
+//Variables for DayClosingPost
+bool alreadyPosted = false;
+
 //RTC variables
 RTCZero rtc;
 char timestamp[25];
@@ -957,7 +960,7 @@ void WriteEEPROM() {
 */
 
 
-void HTTPPost() {
+bool HTTPPost() {
       SDCheckOpen();
       printlogln(F("\r\n*****  HTTP POST  ******"));
 
@@ -1144,6 +1147,7 @@ void HTTPPost() {
 //	else{
 //	  printlogln(F("FONA set to sleep OK"));
 //	}
+	return success;
 }
 
 
@@ -1225,10 +1229,11 @@ void SDCheckOpen() {
 
 void DayClosingPost() //Daniel Castro 29/2/2020. Makes post at the end of the day if engine is off
 {
-	if ((rtc.getHours() == 23)&&(rtc.getMinutes() == 58))
+	if ((rtc.getHours() == 23)&&(rtc.getMinutes() >= 58)&& (!alreadyPosted))
 	{
 		lastpost = true;
 		postflag = true;
-		HTTPPost();
+		if(HTTPPost()) alreadyPosted = true;
 	}
+	if (rtc.getMinutes() < 10) alreadyPosted = false;
 }
