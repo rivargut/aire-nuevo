@@ -75,8 +75,8 @@ struct t  {
 
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
-t t_func2 = {0, 300000}; //Run every 5 minutes - HTTP POSTing
-t t_func3 = {0, 180000}; //Run every 2 minutes - SMS Process
+t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
+t t_func3 = {0, 300000}; //Run every 5 minutes - SMS Process
 
 // variables
 char replybuffer[255]; // this is a large buffer for replies
@@ -1124,13 +1124,15 @@ void HTTPPost() {
               fLPGLiters = 0;
     
             
-          } // HTTP POST 
-           if (!fona.enableGPRS(false))
-              printlogln(F("Failed to turn off GPRS."));
-           else
-              printlogln(F("GPRS disconnected"));
-        
+          } // HTTP POST
         }
+           
+           
+         if (!fona.enableGPRS(false))
+            printlogln(F("Failed to turn off GPRS."));
+         else
+            printlogln(F("GPRS disconnected"));
+              
       } // if (postflag == false)
      
       datafile.close();
