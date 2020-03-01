@@ -11,6 +11,7 @@
 #include <RTCZero.h>
 
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //                  ECU - GPS controller
 //                  Ricardo Vargas 
@@ -61,7 +62,8 @@
 //////////
 
 // TO DO: implement a method to program these variables through SMS
-char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Dispositivo 1
+char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Daniel 2. de daescastros
+//Carro de Carlos  char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b"; //Daniel Castro. de daescastros
 char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d"; //daescastros
 char serverurl[80] = "https://airenuevoapp.japuware.com/api/v1/stats";
 
@@ -174,6 +176,8 @@ RTCZero rtc;
 char timestamp[25];
 byte secs,mins,hrs,day,month,year;
         
+		
+		
 struct xSave { // saving to EEPROM
   uint8_t init;
   char password[9];
@@ -373,7 +377,7 @@ uint8_t EEPROMInit = 0;
   digitalWrite(FONA_PWRKEY, HIGH);
   
   // TO DO: change fona serial baud rate to 115200 as default
-   fonaSerial->begin(4800);
+   fonaSerial->begin(9600);
    fona.initPort(*fonaSerial);
    if (! fona.begin()) {
      printlogln(F("Couldn't find FONA"));
@@ -493,7 +497,9 @@ void loop() {
    if (tCheck(&t_func3)) {
     ProcessSMS();
     tRun(&t_func3);
-  } 
+  }
+  
+	DayClosingPost(); //Last post at the end of the day
 }
 
 void ReadOBD() {
@@ -596,6 +602,7 @@ void ReadOBD() {
           lastpost = true;
           engineflag = false;
           return;
+		  printlogln(F("Debug"));
         } else {
           res = obd9141.getCurrentPID(RPM,_16BITS);
           if (!res) {
@@ -603,7 +610,7 @@ void ReadOBD() {
             return;
           }
         }
-     } 
+     }
       
      
         fRPM = obd9141.readUint16()/4;
@@ -1212,4 +1219,14 @@ void SDCheckOpen() {
      } //if (datafile)
     
   }
+}
+
+void DayClosingPost() //Daniel Castro 29/2/2020. Makes post at the end of the day if engine is off
+{
+	if ((rtc.getHours() == 23)&&(rtc.getMinutes() == 58))
+	{
+		lastpost = true;
+		postflag = true;
+		HTTPPost();
+	}
 }
