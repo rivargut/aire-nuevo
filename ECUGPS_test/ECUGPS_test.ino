@@ -465,12 +465,14 @@ uint8_t EEPROMInit = 0;
         init_success =  obd9141.init(); // crossfox uses 50 baud init
         printlog("OBD2 init success:"); printlogln(init_success);
       }
+	  
+	printlogln(F("Clearing relay status"));//Daniel 1/3/2020. Relay set to low save energy
+    digitalWrite(PIN_OFF, LOW);
+	digitalWrite(PIN_ON, LOW);
+	
    // Time from RTC
    rtctimestamp(timestamp);
    printlog(F("Current Time: ")); printlogln(timestamp);
-
-//   fona.enableGPS(false);
-//   printlogln(F("GPS Off"));
    
    startmillis = millis(); // discount setup time from delta.
    printlogln(F("*****  Init End  ******\r\n"));
@@ -872,6 +874,10 @@ void ProcessSMS () {
 			  // disconnect ECU through relay
 			  digitalWrite(PIN_ON, LOW);
 			  digitalWrite(PIN_OFF, HIGH);
+			  delay(500);//Daniel 1/3/2020. Relay set to low save energy
+			  printlogln(F("Clearing relay status"));
+			  digitalWrite(PIN_OFF, LOW);
+			  digitalWrite(PIN_ON, LOW);
 			  //WriteEEPROM();
 			  if (!fona.sendSMS(sender, "LPG ECU Shut down OK")) {
 				printlogln(F("ERROR could not send SMS"));
@@ -890,6 +896,10 @@ void ProcessSMS () {
 			  // Connect ECU through relay
 			  digitalWrite(PIN_OFF, LOW);
 			  digitalWrite(PIN_ON, HIGH);
+			  delay(500);//Daniel 1/3/2020. Relay set to low save energy
+			  printlogln(F("Clearing relay status"));
+			  digitalWrite(PIN_OFF, LOW);
+			  digitalWrite(PIN_ON, LOW);
 			  //WriteEEPROM();
 			  if (!fona.sendSMS(sender, "LPG ECU Reconnect OK")) {
 				printlogln(F("ERROR could not send SMS"));
@@ -978,9 +988,7 @@ bool HTTPPost() {
           printlog("VPct = "); printlog(batt); printlogln("%");
         } //Battery reports
 
-      // get GPS location
-//      fona.enableGPS(true);
-//      delay(5000);
+
 //		  if (! fona.setPowerMode(1)) {
 //			  printlogln(F("ERROR getting FONA out of sleep"));
 //			  delay(2000);
@@ -1140,7 +1148,7 @@ bool HTTPPost() {
      
       datafile.close();
       logopen = false;
-//      fona.enableGPS(false);
+
 //	if (! fona.setPowerMode(0)) {
 //		printlogln(F("ERROR getting FONA to sleep!"));
 //	}
