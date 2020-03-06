@@ -62,8 +62,8 @@
 //////////
 
 // TO DO: implement a method to program these variables through SMS
-char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Daniel 2. de daescastros
-//Carro de Carlos  char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b"; //Daniel Castro. de daescastros
+//char deviceID[37] = "0d8a50b8-c3d2-5c4e-a671-cf5809ac4f12"; //Daniel 2. de daescastros
+char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b"; //Daniel Castro. de daescastros //Carro de Carlos
 char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d"; //daescastros
 char serverurl[80] = "https://airenuevoapp.japuware.com/api/v1/stats";
 
@@ -92,10 +92,10 @@ char delim[2] = " "; // delimiter for parsing
 // 2: KWP (fast 9141)
 // 3: CAN Bus
 // 4: SIMULATION
-uint8_t obdflag = 4;
+uint8_t obdflag = 1;
 
 unsigned long elapsedmillis = 0;
-unsigned long startmillis = 0;
+unsigned long startmillis = 0; 
 float elapsedtime = 0;
 
 // Hardware serial port to FONA
@@ -107,7 +107,7 @@ HardwareSerial *isoSerial = &Serial2;
 // Use this for FONA 800 and 808s
 Adafruit_FONA fona = Adafruit_FONA(FONA_RST);
 
-uint8_t readline(char *buff, uint8_t maxbuff, uint16_t timeout = 0);
+uint8_t readline(char *buff, uint8_t maxbuff, uint16_t timeout = 0);   
 uint8_t type;
 
 int a; // iterator
@@ -380,7 +380,7 @@ uint8_t EEPROMInit = 0;
   digitalWrite(FONA_PWRKEY, HIGH);
   
   // TO DO: change fona serial baud rate to 115200 as default
-   fonaSerial->begin(9600);
+   fonaSerial->begin(4800);
    fona.initPort(*fonaSerial);
    if (! fona.begin()) {
      printlogln(F("Couldn't find FONA"));
@@ -454,13 +454,13 @@ uint8_t EEPROMInit = 0;
       }
       else if (obdflag == 2) {
         printlogln(F("OBD Port Type: ISO 9141 fast (KWP)"));
-        digitalWrite(LIN_SLP, HIGH);
+        //digitalWrite(LIN_SLP, HIGH);
         obd9141.begin(Serial2, ISO_RX, ISO_TX);
         init_success =  obd9141.initKWP(); // Aveo uses KWP
         printlog("OBD2 init success:"); printlogln(init_success);
       } else if (obdflag == 1) {
         printlogln(F("OBD Port Type: ISO 9141 slow"));
-        digitalWrite(LIN_SLP, HIGH);
+        //digitalWrite(LIN_SLP, HIGH);
         obd9141.begin(Serial2, ISO_RX, ISO_TX);
         init_success =  obd9141.init(); // crossfox uses 50 baud init
         printlog("OBD2 init success:"); printlogln(init_success);
@@ -1096,7 +1096,12 @@ bool HTTPPost() {
               success = true;
             }
             else {
-                printlogln("Failed HTTP POST! Wait 5 seconds to get error and retry");
+                printlogln("Failed HTTP POST! Wait 5 seconds to get error and continue");
+                if (!fona.sendSMS("84050685", "Failed HTTP POST")) {
+                  printlogln(F("ERROR could not send SMS"));
+                } else {
+                  printlogln(F("SMS sent with error message"));
+                }
                 delay(5000);
                 fona.HTTP_POST_end();
             }
