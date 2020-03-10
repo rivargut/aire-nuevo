@@ -67,6 +67,8 @@ char deviceID[37] = "4b035011-a59f-5637-8b0d-8b5efada1b2b"; //Daniel Castro. de 
 char ownerID[37] = "1651e756-93f8-52be-a7b0-7332c2c7c66d"; //daescastros
 char serverurl[80] = "https://airenuevoapp.japuware.com/api/v1/stats";
 
+//char ownerID[37] = "2818baa6-9263-5133-a102-5279845967fc"; // Owner ID Ricardo
+//char deviceID[37] = "fd5c8844-c060-56f9-9772-4c6467572a10"; //  Device ID Ricardo
 
 struct t  {
   unsigned long tStart;
@@ -75,8 +77,8 @@ struct t  {
 
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
-t t_func2 = {0, 900000}; //Run every 15 minutes - HTTP POSTing
-t t_func3 = {0, 300000}; //Run every 5 minutes - SMS Process
+t t_func2 = {0, 600000}; //Run every 10 minutes - HTTP POSTing
+t t_func3 = {0, 120000}; //Run every 3 minutes - SMS Process
 
 // variables
 char replybuffer[255]; // this is a large buffer for replies
@@ -380,7 +382,7 @@ uint8_t EEPROMInit = 0;
   digitalWrite(FONA_PWRKEY, HIGH);
   
   // TO DO: change fona serial baud rate to 115200 as default
-   fonaSerial->begin(4800);
+   fonaSerial->begin(9600);
    fona.initPort(*fonaSerial);
    if (! fona.begin()) {
      printlogln(F("Couldn't find FONA"));
@@ -392,37 +394,20 @@ uint8_t EEPROMInit = 0;
 	 //Turn on battery recharge option
      printlogln(F("Turning on battery charging"));
      if(!fona.enableBattCharging(1))
-		 printlogln(F("Failed turning battery charging on"));
+		  printlogln(F("Failed turning battery charging on"));
      else
 	 {
-         printlogln(F("Battery charging turned on"));
-		 //Restarting FONA 
-		 SerialUSB.println(F("Shutting down FONA"));
-	     digitalWrite(FONA_PWRKEY, LOW);
-	     delay(1500);
-	     digitalWrite(FONA_PWRKEY, HIGH);
-		 SerialUSB.println(F("Wait 2 seconds to start"));
-		 delay(2000);
-		 SerialUSB.println(F("Initializing....(May take 3 seconds)"));
-         SerialUSB.println(F("PWR KEY Toggle"));
-         digitalWrite(FONA_PWRKEY, HIGH);
-         delay(100);
-         digitalWrite(FONA_PWRKEY, LOW);
-         delay(1000);
-         digitalWrite(FONA_PWRKEY, HIGH);
-		 if (! fona.begin()) {
-			 printlogln(F("Couldn't find FONA"));
-		 }
-	     else {
-			 printlogln(F("FONA is found OK"));
-	 
+       printlogln(F("Battery charging turned on"));
+
+       // Ricardo - removed restart, only necessary first time it is used
+       
 			 // Print module IMEI number.
-			 char imei[16] = {0}; // MUST use a 16 character buffer for IMEI!
+			 char imei[16] = {0};
 			 uint8_t imeiLen = fona.getIMEI(imei);
 			 if (imeiLen > 0) {
 				printlog(F("Module IMEI: ")); printlogln(imei);
 			 }
-			 fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
+			 fona.getSIMCCID(replybuffer);
 			 printlog(F("SIM CCID = ")); printlogln(replybuffer);
 			 
 			 // Configure a GPRS APN, username, and password.
@@ -439,7 +424,6 @@ uint8_t EEPROMInit = 0;
 		
 		 }
 	 }
-   }
 
    printlogln(F("Wait 2 seconds to start main loop..."));
    delay (2000);
@@ -467,7 +451,7 @@ uint8_t EEPROMInit = 0;
       }
 	  
 	printlogln(F("Clearing relay status"));//Daniel 1/3/2020. Relay set to low save energy
-    digitalWrite(PIN_OFF, LOW);
+  digitalWrite(PIN_OFF, LOW);
 	digitalWrite(PIN_ON, LOW);
 	
    // Time from RTC
@@ -510,10 +494,8 @@ void loop() {
 void ReadOBD() {
   SDCheckOpen();
     
-  elapsedmillis = millis() - startmillis; // uses startmillis from previous cycle
-  startmillis = millis();
-  printlog(F("** Elapsed Milliseconds: **")); printlogln(elapsedmillis);
-  
+  // Ricardo 9 March 2020 - moved ellapsed millis to closer to the actual calculation, time is lost during reading so it didnt add up
+   
   // Read analog pin 
   LPGStatusRead = analogRead(LPGSTATUSPIN);
   if (obdflag == 4) {
@@ -557,6 +539,7 @@ void ReadOBD() {
   }
   else if (obdflag == 4) {
     printlogln(F("OBD simulation mode"));
+    delay(2000);
     engineflag = true;
     postflag = true;
     fRPM = random (5000);
@@ -607,7 +590,6 @@ void ReadOBD() {
           lastpost = true;
           engineflag = false;
           return;
-		  printlogln(F("Debug"));
         } else {
           res = obd9141.getCurrentPID(RPM,_16BITS);
           if (!res) {
@@ -620,7 +602,14 @@ void ReadOBD() {
      
         fRPM = obd9141.readUint16()/4;
         if (fRPM == 0) {
+          // Ricardo - 10 March 2020 if engine was on, flag for a last post 
+          if (engineflag == true) {
+            printlogln(F("Engine just turned off - Flag for posting"));
+            postflag = true;
+            lastpost = true;
+          }
           engineflag = false; // Engine off
+          
         } else {
           engineflag = true;
           postflag = true; // only do a fuel calculation and HTTP post if the engine is on
@@ -661,7 +650,12 @@ void ReadOBD() {
   else {
     fAir = fRPM * fIMAP / (fIAT+273) * EngineVol * VE * MAFConst;
     printlog(", Air Gr:" ); printlogln(fAir);
-  
+
+    // Ricardo - Moved ellapsed millis here to include time spent during engine readings
+    elapsedmillis = millis() - startmillis; // uses startmillis from previous cycle
+    startmillis = millis();
+    printlog(F("** Elapsed Milliseconds: **")); printlogln(elapsedmillis);
+      
     // Calculate consumption and KPL
     nSamples ++;
     if (bFuelType) {
@@ -672,12 +666,13 @@ void ReadOBD() {
       }
       else {
         fKPL = 0;
-      }
-
+      }       
       fSumLPGLPH = fSumLPGLPH + fLPH;
       fSumLPGKPL = fSumLPGKPL + fKPL;
       fAvgLPGLPH = fSumLPGLPH / nSamples;
       fAvgLPGKPL = fSumLPGKPL / nSamples;
+      
+
       fLPGTime += (float)elapsedmillis/3600000; // elapsed time in hours, changed by Ricardo 14/2/20
       fLPGLiters += fLPH * (float)elapsedmillis/3600000;
     } 
@@ -704,7 +699,7 @@ void ReadOBD() {
     printlogln(bFuelType);
     printlog("Liters/Hour: ");
     printlog(fLPH);
-    printlog(", KM/Liter: ");
+    printlogln(", KM/Liter: ");
     printlog(fKPL);
     printlog("Gasoline time: ");
     printlogln(fGasTime);
