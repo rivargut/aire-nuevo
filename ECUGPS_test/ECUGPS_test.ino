@@ -39,6 +39,8 @@
 #define FONA_RX 6
 #define FONA_PWRKEY 7
 
+#define PWR_GATE 19 
+
 // Set reset for 12V relay
 #define PIN_OFF 26
 #define PIN_ON 25
@@ -78,7 +80,7 @@ struct t  {
 //Tasks and their Schedules.
 t t_func1 = {0, 1000}; //Run every 1000ms - OBD2 query
 t t_func2 = {0, 600000}; //Run every 10 minutes - HTTP POSTing
-t t_func3 = {0, 120000}; //Run every 3 minutes - SMS Process
+t t_func3 = {0, 150000}; //Run every 3 minutes - SMS Process
 
 // variables
 char replybuffer[255]; // this is a large buffer for replies
@@ -95,6 +97,7 @@ char delim[2] = " "; // delimiter for parsing
 // 3: CAN Bus
 // 4: SIMULATION
 uint8_t obdflag = 1;
+char serialcommand = '0';
 
 unsigned long elapsedmillis = 0;
 unsigned long startmillis = 0; 
@@ -114,6 +117,8 @@ uint8_t type;
 
 int a; // iterator
 
+uint16_t vbat;
+
 //create the CANport acqisition schedulers
 //cAcquireCAN CANport0(CAN_PORT_0);
 
@@ -126,6 +131,8 @@ bool init_success = false;
 bool postflag = false;
 bool lastpost = false; // use to post a final message
 bool engineflag = false;
+bool GPSflag = false; // Ricardo - 28 Mar 2020 add GPS status flag
+bool SIMflag = false; // Ricardo 21 Mar 2020 
 
 float fSpeed = 0; // Km per hour
 float fRPM = 0;   // Revs per minute
@@ -164,13 +171,15 @@ float fLPGLiters = 0;
 
 // GPS variables
 float lat, lon, speedkph,heading, altitude;
-float lastlat,lastlon;  // to track last available coordinates
+float lastlat = 0;
+float lastlon = 0;  // to track last available coordinates
 char gpsdate[20];
 bool gpslock = false;  // Wait until first GPS lock to disable and sleep
 bool FonaSleep = false; // To track if FONA is asleep or not
+uint8_t batreads = 0; // allow 2 measures of charging before turning charger on or off
 
-char data[350];
-PString pdata(data,350);
+char data[400];
+PString pdata(data,400);
 bool success = false;
 
 //Variables for DayClosingPost
@@ -299,6 +308,8 @@ void setup() {
   pinMode(SD_CS, OUTPUT);
   pinMode(SD_DT,INPUT);
   
+  pinMode(PWR_GATE,OUTPUT);
+  
   SerialUSB.begin(115200);
   rtc.begin();
   
@@ -371,23 +382,22 @@ uint8_t EEPROMInit = 0;
    }
   
   pinMode(FONA_RST, OUTPUT);
+  pinMode(FONA_PWRKEY, OUTPUT);
+  
   digitalWrite(FONA_RST, HIGH);
   delay(100);
-  printlogln(F("Initializing PWRKEY..."));
-  pinMode(FONA_PWRKEY, OUTPUT);
-  digitalWrite(FONA_PWRKEY, HIGH);
-  delay(1000);
-  digitalWrite(FONA_PWRKEY, LOW);
-  delay(1100);
-  digitalWrite(FONA_PWRKEY, HIGH);
-  
-  // TO DO: change fona serial baud rate to 115200 as default
+
+   // TO DO: change fona serial baud rate to 115200 as default
    fonaSerial->begin(9600);
    fona.initPort(*fonaSerial);
+   
+   SimTogglePWRKEY();
+
    if (! fona.begin()) {
      printlogln(F("Couldn't find FONA"));
    }
    else {
+     SIMflag = true;
      type = fona.type();
      printlogln(F("FONA is found OK"));
 	 
@@ -400,7 +410,12 @@ uint8_t EEPROMInit = 0;
        printlogln(F("Battery charging turned on"));
 
        // Ricardo - removed restart, only necessary first time it is used
-       
+       // Ricardo 23 March 2020 - put back again the restart in case of a car battery failure
+       SimTogglePWRKEY();
+       if (! fona.begin()) {
+          printlogln(F("Couldn't find FONA"));
+          delay(5000);
+       }
 			 // Print module IMEI number.
 			 char imei[16] = {0};
 			 uint8_t imeiLen = fona.getIMEI(imei);
@@ -421,6 +436,7 @@ uint8_t EEPROMInit = 0;
 				printlogln(F("Failed to turn on GPS!"));
 			 else
 				printlogln(F("GPS Enabled"));
+				GPSflag = true;
 		
 		 }
 	 }
@@ -451,8 +467,8 @@ uint8_t EEPROMInit = 0;
       }
 	  
 	printlogln(F("Clearing relay status"));//Daniel 1/3/2020. Relay set to low save energy
-  digitalWrite(PIN_OFF, LOW);
-	digitalWrite(PIN_ON, LOW);
+   digitalWrite(PIN_OFF, LOW);
+   digitalWrite(PIN_ON, LOW);
 	
    // Time from RTC
    rtctimestamp(timestamp);
@@ -492,7 +508,7 @@ void loop() {
 }
 
 void ReadOBD() {
-  SDCheckOpen();
+  //SDCheckOpen();
     
   // Ricardo 9 March 2020 - moved ellapsed millis to closer to the actual calculation, time is lost during reading so it didnt add up
    
@@ -540,20 +556,48 @@ void ReadOBD() {
   else if (obdflag == 4) {
     printlogln(F("OBD simulation mode"));
     delay(2000);
-    engineflag = true;
-    postflag = true;
-    fRPM = random (5000);
-    fIMAP = random(20,50);
-    fIAT = random(25,50);
-    fSpeed = random(100);
-    printlog("RPM: ");
-    printlog(fRPM);
-    printlog(", Speed: ");
-    printlog(fSpeed);
-    printlog(", IMAP: ");
-    printlog(fIMAP);
-    printlog(", IAT: ");
-    printlog(fIAT);
+
+    if (Serial.available() > 0) {
+      serialcommand = SerialUSB.read();
+       printlogln(F("Serial command read!"));
+      switch (serialcommand) {
+        case '0': { // engine off
+            engineflag = false;
+            break;
+          }
+        case '1': { // engine on
+          engineflag = true;
+          break;
+        }
+      }
+    }
+    if (engineflag) {
+		
+        postflag = true;
+        fRPM = random (5000);
+        fIMAP = random(20,50);
+        fIAT = random(25,50);
+        fSpeed = random(100);
+        printlog("RPM: ");
+        printlog(fRPM);
+        printlog(", Speed: ");
+        printlog(fSpeed);
+        printlog(", IMAP: ");
+        printlog(fIMAP);
+        printlog(", IAT: ");
+        printlog(fIAT);
+    }
+    else {
+        printlogln(F("Vehicle ECU turned off in simulation mode"));
+        startmillis = millis(); // Ricardo 13 March 2020 - reset start counter to avoid false times adding up
+        if (engineflag == true) { // Ricardo 24 March 2020 - include an engine on check since car could have turned off
+          printlogln(F("* Engine just turned off - Flag for posting"));
+          lastpost = true;
+          postflag = true;
+        }
+    }
+    
+    
           
   }
   else {
@@ -587,19 +631,24 @@ void ReadOBD() {
         printlog(F("OBD2 init success: ")); printlogln(init_success);
         if (!init_success) {
           printlogln(F("Vehicle ECU must be off"));
-          lastpost = true;
-          engineflag = false;
-          return;
+    		  startmillis = millis(); // Ricardo 13 March 2020 - reset start counter to avoid false times adding up
+    		  if (engineflag == true) { // Ricardo 24 March 2020 - include an engine on check since car could have turned off
+      			printlogln(F("* Engine just turned off - Flag for posting"));
+      			lastpost = true;
+      			postflag = true;
+      			engineflag = false;
+    		  }
         } else {
           res = obd9141.getCurrentPID(RPM,_16BITS);
           if (!res) {
             printlogln(F("RPM reading still not valid"));
+			
             return;
           }
         }
-     }
+     } //if (!res)
       
-     
+     else {
         fRPM = obd9141.readUint16()/4;
         if (fRPM == 0) {
           // Ricardo - 10 March 2020 if engine was on, flag for a last post 
@@ -617,18 +666,18 @@ void ReadOBD() {
         printlog("RPM: ");
         printlog(fRPM);
         
-       delay(100);
+        delay(100);
        
-       res = obd9141.getCurrentPID(SPEED,_8BITS);
-       if (res) {
+        res = obd9141.getCurrentPID(SPEED,_8BITS);
+        if (res) {
           fSpeed = obd9141.readUint8();
           printlog(", Speed: ");
           printlog(fSpeed);
-       }
-       delay(100);
+        }
+        delay(100);
        
-       res = obd9141.getCurrentPID(IMAP,_8BITS);
-       if (res) {
+        res = obd9141.getCurrentPID(IMAP,_8BITS);
+        if (res) {
           fIMAP = obd9141.readUint8();
           printlog(", IMAP: ");
           printlog(fIMAP);
@@ -642,12 +691,70 @@ void ReadOBD() {
        }
 
        printlogln("");
+     }
   } // if (obdflag == 3)
   
+
   if (! engineflag) {
     printlogln("Engine is turned off - skipping calculation");
+	// If battery level is less than 3.6, turn on charging - Ricardo 28 march 2020
+	
+		if (! fona.getBattVoltage(&vbat) ) {
+		  printlogln(F("Failed to read Batt"));
+		  batreads = 0;
+		} else {
+			printlog(F("VBat = ")); printlog(vbat); printlogln(F(" mV"));
+		
+			if (vbat < 3600) {
+				// turn on charging
+				digitalWrite(PWR_GATE,LOW);
+				printlogln(F("Turned Charger ON"));
+  		  if (!fona.sendSMS("84050685", "Turned Charger ON")) {
+  			  printlogln(F("ERROR could not send SMS"));
+  		  } else {
+  			  printlogln(F("SMS sent with message"));
+  		  }
+        delay(4000);
+  			}
+			else if (vbat > 4050) {
+			  batreads ++;
+			  if (batreads > 2) {
+					
+				
+			   if (!fona.sendSMS("84050685", "Turned Charger OFF battery is charged")) {
+				  printlogln(F("ERROR could not send SMS"));
+				} else {
+				  printlogln(F("SMS sent with message"));
+				}
+        delay(4000);
+				digitalWrite(PWR_GATE,HIGH);
+				printlogln(F("Turned Charger OFF battery is charged"));
+				printlogln(F("Turn off SIM808 via PWRKEY"));
+				SimTogglePWRKEY();
+				SIMflag = false;
+				GPSflag = false;
+				// Enter sleep mode for CPU
+				
+			  }
+
+			}
+			else{
+			  batreads = 0;
+			}
+		}
+
   }
   else {
+  	digitalWrite(PWR_GATE,LOW); // Keep charger ON if engine is on.. Ricardo 28 march 2020
+  	// Turn on GPS in case it was disabled
+  	if (GPSflag == false) {
+  		 if (!fona.enableGPS(true))
+  			printlogln(F("Failed to turn ON GPS!"));
+  		 else {
+  			printlogln(F("GPS Enabled!"));
+  			GPSflag = true;
+  		 }
+  	}
     fAir = fRPM * fIMAP / (fIAT+273) * EngineVol * VE * MAFConst;
     printlog(", Air Gr:" ); printlogln(fAir);
 
@@ -728,19 +835,45 @@ void ReadOBD() {
   
 
 void ProcessSMS () {
-  // Power mode ON
-//	  if (! fona.setPowerMode(1)) {
-//		  printlogln(F("ERROR getting FONA out of sleep"));
-//		  delay(2000);
-//	  }
-//	  else {
-//		printlogln(F("FONA out of sleep OK"));
-//	  }
-//
-//   printlogln(F("20 seconds Delay before reading SMS"));
-//   delay(30000);
+	printlogln(F("**** SMS Process *****"));
+  if (SIMflag == false) {
+    SIMflag = true;
+    printlogln(F("Turn ON SIM808 via PWRKEY"));
+    SimTogglePWRKEY();
+     if (! fona.begin()) {
+          printlogln(F("Couldn't find FONA"));
+          delay(5000);
+		  return;
+       }
+     else{
+        printlogln(F("Turn ON SIM808 successfully"));
+        printlogln(F("20 seconds Delay before reading SMS"));
+        delay(20000);
+		
+		// turn on charger in case battery is low
+		if (! fona.getBattVoltage(&vbat) ) {
+		  printlogln(F("Failed to read Batt"));
 
-	
+		} else {
+			printlog(F("VBat = ")); printlog(vbat); printlogln(F(" mV"));
+		
+			if (vbat < 3600) {
+				// turn on charging
+				digitalWrite(PWR_GATE,LOW);
+				printlogln(F("Turned Charger ON"));
+				  if (!fona.sendSMS("84050685", "Turned Charger ON")) {
+					printlogln(F("ERROR could not send SMS"));
+				  } else {
+					printlogln(F("SMS sent with message"));
+				  }
+			}
+		}
+		  
+		
+     }
+       
+  }
+
   // Read # of SMS, process them all
   uint16_t smslen;
   int8_t smsnum = fona.getNumSMS();
@@ -839,23 +972,43 @@ void ProcessSMS () {
 			else {
 				char sms[140];
 				PString psms(sms,140);
-			
-			  if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
-				  printlogln(F("Latitude: "));printlogln(lat);
-				  printlogln(F("Longitude: "));printlogln(lon);      
-				  psms.print("GPS Location: https://www.google.com/maps/search/?api=1&query=");
-				  psms.print(lat,4);
-				  psms.print(",");
-				  psms.print(lon,4);
-			  }
-			  else {
-				psms.print("GPS Location not locked");
+
+				  // GPS was turned off due to engine off
+				if (GPSflag == false) {
+					if (!fona.enableGPS(true)) {
+						printlogln(F("Failed to turn ON GPS!"));
+						psms.print("Failed to turn ON GPS!");
+					}
+					else {
+						printlogln(F("GPS Enabled! Waiting 60 seconds for GPS lock"));
+						delay(60000);
+						GPSflag = true;
+					}
+				}
+			  
+			  if (GPSflag) {
+				  if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
+					  printlogln(F("Latitude: "));printlogln(lat);
+					  printlogln(F("Longitude: "));printlogln(lon);
+					  lastlat = lat;
+					  lastlon = lon;
+				  }
+				  else {
+					  psms.print("GPS not locked. ");
+
+				  }
+				  if (lastlat != 0) {
+					  psms.print("https://www.google.com/maps/search/?api=1&query=");
+					  psms.print(lastlat,4);
+					  psms.print(",");
+					  psms.print(lastlon,4);
+				  }
 			  }
 			  
 			  if (!fona.sendSMS(sender, sms)) {
-				printlogln(F("ERROR could not send SMS"));
+				  printlogln(F("ERROR could not send SMS"));
 			  } else {
-				printlogln(F("SMS sent with GPS coordinates"));
+				  printlogln(F("SMS sent with GPS coordinates"));
 			  }
 			}
 		  }
@@ -910,7 +1063,7 @@ void ProcessSMS () {
 				printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
 			  }
 			  else {
-						uint16_t vbat;
+
 						char sms[140];
 						PString psms(sms,140);
 						if (! fona.getBattVoltage(&vbat)) {
@@ -928,6 +1081,39 @@ void ProcessSMS () {
 				
 				  } // else
 		  } // if (strcmp(command,"BAT?") == 0) 
+			// Ricardo 13 MARCH 2020 - Include a command to read back the OBD2 Data
+		  if (strcmp(command,"DATA?") == 0) {
+			  int i = strcmp(readpass, EEPROMSave.password);
+			  if (i != 0) {
+				printlogln(F("WARNING Password sent is NOT correct.. bypassing action"));
+			  }
+			  else {
+						
+						char sms[140];
+						PString psms(sms,140);
+						psms.print("Fuel:");
+						psms.print(bFuelType);
+						psms.print(",LPH:");
+						psms.print(fLPH);
+						psms.print(",KPL:");
+						psms.print(fKPL);
+						psms.print(",Gt:");
+						psms.print(fGasTime);
+						psms.print(",Lt:");
+						psms.print(fLPGTime);
+						psms.print(",Gl:");
+						psms.print(fGasLiters);
+						psms.print(",Ll:");
+						psms.print(fLPGLiters);
+						
+						if (!fona.sendSMS(sender, sms)) {
+							printlogln(F("ERROR could not send SMS"));
+						} else {
+							printlogln(F("SMS sent with Parametric data"));
+						}
+				
+				  } // else
+		  } // if (strcmp(command,"BAT?") == 0) 
 
 
 
@@ -940,13 +1126,13 @@ void ProcessSMS () {
   printlogln(F("\r\n"));
   datafile.flush();
   logopen = false;
-//  if (! fona.setPowerMode(0)) {
-//	printlogln(F("ERROR getting FONA to sleep!"));
-//  }
-//  else{
-//	  
-//	  printlogln(F("FONA set to sleep OK"));
-//  }
+
+
+	if (!engineflag && SIMflag == true) {
+		printlogln(F("Turn off SIM808 via PWRKEY"));
+        SimTogglePWRKEY();
+        SIMflag = false;
+	}
 	
 } // ProcessSMS
 
@@ -966,195 +1152,217 @@ void WriteEEPROM() {
 
 
 bool HTTPPost() {
-      SDCheckOpen();
-      printlogln(F("\r\n*****  HTTP POST  ******"));
-
-      uint16_t batt; //Battery reports
-        if (! fona.getBattVoltage(&batt)) {
-          printlogln(F("Failed to read Batt"));
-        } else {
-          printlog("VBat = "); printlog(batt); printlogln(" mV");
-        }
-
-
-        if (! fona.getBattPercent(&batt)) {
-          printlogln("Failed to read Batt");
-        } else {
-          printlog("VPct = "); printlog(batt); printlogln("%");
-        } //Battery reports
-
-
-//		  if (! fona.setPowerMode(1)) {
-//			  printlogln(F("ERROR getting FONA out of sleep"));
-//			  delay(2000);
-//		  }
-//		  else {
-//			printlogln(F("FONA out of sleep OK"));
-//		  }
-//     
-//       printlogln(F("DELAY 30 seconds before transmit"));
-//       delay(30000);
-      
-      if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
-        
-        printlog(F("Latitude: "));printlogln(lat);
-        printlog(F("Longitude: "));printlogln(lon);
-        printlog(F("Altitude: "));printlogln(altitude);
-        lastlat = lat;
-        lastlon = lon;
-        // Check if RTC has a proper date else use GPS date to synch
-        
-      } else {
-        printlog(F("GPS not locked, using last coordinate: "));
-        printlog(lastlat);
-        printlog(F(","));
-        printlogln(lastlon);
-      }
-      //if (rtc.getYear() == 0) {
-        printlogln(F("Synch RTC with GPS date"));
-        if (fona.getGPStime(gpsdate)) {
-          printlog(F("GPS Date: "));printlogln(gpsdate);
-          rtc.setYear(valueFromString(gpsdate,2,2));
-          rtc.setMonth(valueFromString(gpsdate,4,2));
-          rtc.setDay(valueFromString(gpsdate,6,2));
-          if ((valueFromString(gpsdate,8,2) + UTC) < 0) {
-            rtc.setHours(valueFromString(gpsdate,8,2) + UTC + 24);
-          } else{
-            rtc.setHours(valueFromString(gpsdate,8,2) + UTC);
-          }
-          rtc.setMinutes(valueFromString(gpsdate,10,2));
-          rtc.setSeconds(valueFromString(gpsdate,12,2));
-        }
-      //}
-
-      rtctimestamp(timestamp);
-      printlog(F("Current Time: ")); printlogln(timestamp);
-
-      if (!postflag) {
-        printlogln(F("****POSTing is disabled!"));
+      //SDCheckOpen();
+	  
+	  if (!postflag) {
+        printlogln(F("****HTTP POSTing is disabled!"));
       }
       else{
-        
-        if (lastpost) {
-          printlogln(F("LAST POST after engine is turned off!"));
-          lastpost = false;
-          postflag = false;
-        }
 
-        if (CheckNetwork()) {
-            // build JSON string for HTTP POST
-            delay(500);
-            printlogln(F("HTTP POST data.."));
+		  if (SIMflag == false) {
+			printlogln(F("Turn ON SIM808 via PWRKEY"));
+			SimTogglePWRKEY();
+			SIMflag = true;
+			 if (! fona.begin()) {
+				  printlogln(F("Couldn't find FONA"));
+				  delay(5000);
+			   }
+			 else{
+				printlogln(F("Turn ON SIM808 successfully"));
+				printlogln(F("20 seconds Delay before reading SMS"));
+				delay(20000);
+			 }
+			   
+		  }
+		  printlogln(F("\r\n*****  HTTP POST  ******"));
 
-            char data[350];
-            PString pdata(data,350);
-            
-            uint16_t statuscode;
-            int16_t lengthp;
-            pdata.print("{\"datetime\":\"");
-            pdata.print(timestamp);
-            pdata.print("\",\"device\":\"");
-            pdata.print(deviceID);
-            pdata.print("\",\"lgpTime\":"); 
-            pdata.print(fLPGTime);
-            pdata.print(",\"lgpPercentage\":");
-            pdata.print(fLPGPerc);
-            pdata.print(",\"lgpLh\":");
-            pdata.print(fAvgLPGLPH);
-            pdata.print(",\"lgpKml\":");
-            pdata.print(fAvgLPGKPL);
-            pdata.print(",\"petrolTime\":");
-            pdata.print(fGasTime);
-            pdata.print(",\"petrolPercentage\":");
-            pdata.print(fGasPerc);
-            pdata.print(",\"petrolLh\":");
-            pdata.print(fAvgGasLPH);
-            pdata.print(",\"petrolKml\":");
-            pdata.print(fAvgGasKPL);
-            pdata.print(",\"owner\":\"");
-            pdata.print(ownerID);
-			pdata.print("\",\"lgpL\":\"");
-            pdata.print(fLPGLiters);
-			pdata.print("\",\"petrolL\":\"");
-            pdata.print(fGasLiters);
-            pdata.print("\",\"latitude\":");
-            pdata.print(lastlat,4);
-            pdata.print(",\"longitude\":");
-            pdata.print(lastlon,4);
-            pdata.print("}");
-         
-            printlogln(data);
-            success = false;
-            printlogln(F("POSTing data.."));
-            
-            if (fona.HTTP_POST_start(serverurl, F("application/json"), (uint8_t *) data, strlen(pdata), &statuscode, (uint16_t *)&lengthp)) {
-              success = true;
-            }
-            else {
-                printlogln("Failed HTTP POST! Wait 5 seconds to get error and continue");
-                if (!fona.sendSMS("84050685", "Failed HTTP POST")) {
-                  printlogln(F("ERROR could not send SMS"));
-                } else {
-                  printlogln(F("SMS sent with error message"));
-                }
-                delay(5000);
-                fona.HTTP_POST_end();
-            }
-              
-            if (success == true) {
-            
-              while (lengthp > 0) {
-                while (fona.available()) {
-                  char c = fona.read();
-                  SerialUSB.write(c);
-        
-                  lengthp--;
-                  if (! lengthp) break;
-                }
-              }
-              printlogln(F("POSTing success"));
-              printlogln(F("\n\n****"));
-              fona.HTTP_POST_end();
-          
-              // reset variables to start next measurement cycle
-              fGasTime = 0;
-              fLPGTime = 0;
-              fGasPerc = 0;
-              fLPGPerc = 0;
-              fAvgGasLPH = 0;
-              fAvgGasKPL = 0;
-              fAvgLPGLPH = 0;
-              fAvgLPGKPL = 0;
-              fSumGasLPH = 0;
-              fSumGasKPL = 0;
-              fSumLPGLPH = 0;
-              fSumLPGKPL = 0;
-              nSamples = 0;
-              elapsedmillis = 0;
-              fGasLiters = 0;
-              fLPGLiters = 0;
-    
-            
-          } // HTTP POST
-        }
-           
-           
-         if (!fona.enableGPRS(false))
-            printlogln(F("Failed to turn off GPRS."));
-         else
-            printlogln(F("GPRS disconnected"));
-              
-      } // if (postflag == false)
-     
-      datafile.close();
-      logopen = false;
+		  uint16_t batt; //Battery reports
+			if (! fona.getBattVoltage(&batt)) {
+			  printlogln(F("Failed to read Batt"));
+			} else {
+			  printlog("VBat = "); printlog(batt); printlogln(" mV");
+			}
 
-//	if (! fona.setPowerMode(0)) {
-//		printlogln(F("ERROR getting FONA to sleep!"));
-//	}
-//	else{
-//	  printlogln(F("FONA set to sleep OK"));
-//	}
+
+			if (! fona.getBattPercent(&batt)) {
+			  printlogln("Failed to read Batt");
+			} else {
+			  printlog("VPct = "); printlog(batt); printlogln("%");
+			} //Battery reports
+
+			// GPS was turned off due to engine off
+			if (GPSflag == false) {
+			  if (!fona.enableGPS(true)) {
+				printlogln(F("Failed to turn ON GPS!"));
+			  }
+			  else {
+				printlogln(F("GPS Enabled! Waiting 60 seconds for GPS lock"));
+				delay(60000);
+				GPSflag = true;
+			  }
+			}
+			
+			if (GPSflag) {
+			  if (fona.getGPS(&lat,&lon,&speedkph,&heading,&altitude) ) {
+				
+				printlog(F("Latitude: "));printlogln(lat);
+				printlog(F("Longitude: "));printlogln(lon);
+				printlog(F("Altitude: "));printlogln(altitude);
+				lastlat = lat;
+				lastlon = lon;
+				
+				
+			  } else {
+				printlog(F("GPS not locked, using last coordinate: "));
+				printlog(lastlat);
+				printlog(F(","));
+				printlogln(lastlon);
+			  }
+				// Check if RTC has a proper date else use GPS date to synch
+				printlogln(F("Synch RTC with GPS date"));
+				if (fona.getGPStime(gpsdate)) {
+				  printlog(F("GPS Date: "));printlogln(gpsdate);
+				  rtc.setYear(valueFromString(gpsdate,2,2));
+				  rtc.setMonth(valueFromString(gpsdate,4,2));
+				  rtc.setDay(valueFromString(gpsdate,6,2));
+				  if ((valueFromString(gpsdate,8,2) + UTC) < 0) {
+					rtc.setHours(valueFromString(gpsdate,8,2) + UTC + 24);
+				  } else{
+					rtc.setHours(valueFromString(gpsdate,8,2) + UTC);
+				  }
+				  rtc.setMinutes(valueFromString(gpsdate,10,2));
+				  rtc.setSeconds(valueFromString(gpsdate,12,2));
+				}
+			}
+
+
+		  rtctimestamp(timestamp);
+		  printlog(F("Current Time: ")); printlogln(timestamp);
+
+		  
+			
+			if (lastpost) {
+			  printlogln(F("LAST POST after engine is turned off!"));
+			  lastpost = false;
+			}
+
+			if (CheckNetwork()) {
+				// build JSON string for HTTP POST
+				delay(500);
+				printlogln(F("HTTP POST data.."));
+
+				char data[350];
+				PString pdata(data,350);
+				
+				uint16_t statuscode;
+				int16_t lengthp;
+				pdata.print("{\"datetime\":\"");
+				pdata.print(timestamp);
+				pdata.print("\",\"device\":\"");
+				pdata.print(deviceID);
+				pdata.print("\",\"lgpTime\":"); 
+				pdata.print(fLPGTime);
+				pdata.print(",\"lgpPercentage\":");
+				pdata.print(fLPGPerc);
+				pdata.print(",\"lgpLh\":");
+				pdata.print(fAvgLPGLPH);
+				pdata.print(",\"lgpKml\":");
+				pdata.print(fAvgLPGKPL);
+				pdata.print(",\"petrolTime\":");
+				pdata.print(fGasTime);
+				pdata.print(",\"petrolPercentage\":");
+				pdata.print(fGasPerc);
+				pdata.print(",\"petrolLh\":");
+				pdata.print(fAvgGasLPH);
+				pdata.print(",\"petrolKml\":");
+				pdata.print(fAvgGasKPL);
+				pdata.print(",\"owner\":\"");
+				pdata.print(ownerID);
+				pdata.print("\",\"lgpL\":\"");
+				pdata.print(fLPGLiters);
+				pdata.print("\",\"petrolL\":\"");
+				pdata.print(fGasLiters);
+				pdata.print("\",\"latitude\":");
+				pdata.print(lastlat,4);
+				pdata.print(",\"longitude\":");
+				pdata.print(lastlon,4);
+				pdata.print("}");
+			 
+				printlogln(data);
+				success = false;
+				printlogln(F("POSTing data.."));
+				
+				if (fona.HTTP_POST_start(serverurl, F("application/json"), (uint8_t *) data, strlen(pdata), &statuscode, (uint16_t *)&lengthp)) {
+				  success = true;
+				}
+				else {
+					printlogln("Failed HTTP POST! Wait 5 seconds to get error and continue");
+					if (!fona.sendSMS("84050685", "Failed HTTP POST")) {
+					  printlogln(F("ERROR could not send SMS"));
+					} else {
+					  printlogln(F("SMS sent with error message"));
+					}
+					delay(5000);
+					fona.HTTP_POST_end();
+				}
+				  
+				if (success == true) {
+				
+				  while (lengthp > 0) {
+					while (fona.available()) {
+					  char c = fona.read();
+					  SerialUSB.write(c);
+			
+					  lengthp--;
+					  if (! lengthp) break;
+					}
+				  }
+				  printlogln("");
+				  printlogln(F("POSTing success"));
+				  printlogln(F("\n\n****"));
+				  fona.HTTP_POST_end();
+				  postflag = false;  // Ricardo 24 Mar 2020 - moved post flag here - flag only clears after a successful posting
+
+				  // reset variables to start next measurement cycle
+				  fGasTime = 0;
+				  fLPGTime = 0;
+				  fGasPerc = 0;
+				  fLPGPerc = 0;
+				  fAvgGasLPH = 0;
+				  fAvgGasKPL = 0;
+				  fAvgLPGLPH = 0;
+				  fAvgLPGKPL = 0;
+				  fSumGasLPH = 0;
+				  fSumGasKPL = 0;
+				  fSumLPGLPH = 0;
+				  fSumLPGKPL = 0;
+				  nSamples = 0;
+				  //elapsedmillis = 0; counter should not be reset - Ricardo 13 March 2020
+				  fGasLiters = 0;
+				  fLPGLiters = 0;
+
+				
+			  } // HTTP POST
+			}
+			   
+			   
+			 if (!fona.enableGPRS(false))
+				printlogln(F("Failed to turn off GPRS."));
+			 else
+				printlogln(F("GPRS disconnected"));
+			
+			if (!engineflag && SIMflag == true) {
+				printlogln(F("Turn off SIM808 via PWRKEY"));
+				SimTogglePWRKEY();
+				SIMflag = false;
+			}
+		} // if (postflag == false)
+		 
+		  datafile.close();
+		  logopen = false;
+
+
+
 	return success;
 }
 
@@ -1181,6 +1389,11 @@ bool CheckNetwork() {
     printlogln(F("Network Registered"));
     if (!fona.enableGPRS(true)) {
         printlogln(F("Failed to turn GPRS!"));
+			if (!fona.sendSMS("84050685", "Failed Turn on GPRS")) {
+				printlogln(F("ERROR could not send SMS"));
+            } else {
+                printlogln(F("SMS sent with error message"));
+            }
         return false;
     } else {
       printlogln(F("GPRS Enabled!"));
@@ -1244,4 +1457,17 @@ void DayClosingPost() //Daniel Castro 29/2/2020. Makes post at the end of the da
 		if(HTTPPost()) alreadyPosted = true;
 	}
 	if (rtc.getMinutes() < 10) alreadyPosted = false;
+}
+
+void SimTogglePWRKEY()
+{
+	
+	printlogln(F("Toggling PWRKEY..."));
+	digitalWrite(FONA_PWRKEY, HIGH);
+	delay(1000);
+	digitalWrite(FONA_PWRKEY, LOW);
+	delay(1800);
+	digitalWrite(FONA_PWRKEY, HIGH);
+	delay(500);
+  
 }
