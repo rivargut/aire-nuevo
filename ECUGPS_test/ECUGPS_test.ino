@@ -98,6 +98,9 @@ char delim[2] = " "; // delimiter for parsing
 // 4: SIMULATION
 uint8_t obdflag = 1;
 char serialcommand = '0';
+float simbatvolt = 4.2; // variable to simulate battery voltage
+bool pwrgatestatus = false;
+bool chargersentstatus = false;
 
 unsigned long elapsedmillis = 0;
 unsigned long startmillis = 0; 
@@ -569,6 +572,7 @@ void ReadOBD() {
           engineflag = true;
           break;
         }
+		
       }
     }
     if (engineflag) {
@@ -700,40 +704,50 @@ void ReadOBD() {
 	// If battery level is less than 3.6, turn on charging - Ricardo 28 march 2020
 	
 		if (! fona.getBattVoltage(&vbat) ) {
-		  printlogln(F("Failed to read Batt"));
+		  printlogln(F("Failed to read Batt or SIM is turned off"));
 		  batreads = 0;
 		} else {
-			printlog(F("VBat = ")); printlog(vbat); printlogln(F(" mV"));
+			if (obdflag == 4) {
+				 /*if (pwrgatestatus) {
+					 // charger off
+					 simbatvolt -= 0.05;
+				 }
+				 else {
+					 simbatvolt += 0.05;
+				 }
+				 vbat = simbatvolt*1000;
+				 printlog(F("Simulation VBAT = "));printlog(vbat);
+         */
+         printlog(F("VBat = ")); printlog(vbat); printlogln(F(" mV"));
+			}
+			else {
+				printlog(F("VBat = ")); printlog(vbat); printlogln(F(" mV"));
+			}
+     
 		
 			if (vbat < 3600) {
 				// turn on charging
 				digitalWrite(PWR_GATE,LOW);
-				printlogln(F("Turned Charger ON"));
-  		  if (!fona.sendSMS("84050685", "Turned Charger ON")) {
-  			  printlogln(F("ERROR could not send SMS"));
-  		  } else {
-  			  printlogln(F("SMS sent with message"));
-  		  }
-        delay(4000);
-  			}
+				pwrgatestatus = false;
+        if (chargersentstatus == false) {
+				  sendText("Turned Charger ON");
+          chargersentstatus = true; // send only once
+        }
+				delay(4000);
+  		}
 			else if (vbat > 4050) {
 			  batreads ++;
 			  if (batreads > 2) {
-					
-				
-			   if (!fona.sendSMS("84050685", "Turned Charger OFF battery is charged")) {
-				  printlogln(F("ERROR could not send SMS"));
-				} else {
-				  printlogln(F("SMS sent with message"));
-				}
-        delay(4000);
-				digitalWrite(PWR_GATE,HIGH);
-				printlogln(F("Turned Charger OFF battery is charged"));
-				printlogln(F("Turn off SIM808 via PWRKEY"));
-				SimTogglePWRKEY();
-				SIMflag = false;
-				GPSflag = false;
-				// Enter sleep mode for CPU
+  				sendText("Turned Charger OFF battery is charged");
+  				delay(4000);
+  				digitalWrite(PWR_GATE,HIGH);
+  				pwrgatestatus = true;
+          chargersentstatus = false;
+  				printlogln(F("Turn off SIM808 via PWRKEY"));
+  				SimTogglePWRKEY();
+  				SIMflag = false;
+  				GPSflag = false;
+  				// Enter sleep mode for CPU
 				
 			  }
 
@@ -746,6 +760,16 @@ void ReadOBD() {
   }
   else {
   	digitalWrite(PWR_GATE,LOW); // Keep charger ON if engine is on.. Ricardo 28 march 2020
+    chargersentstatus = false;
+  	if (!SIMflag) {
+  		SimTogglePWRKEY();
+      if (! fona.begin()) {
+        printlogln(F("Couldn't find FONA"));
+        delay(5000);
+      }
+  		SIMflag = true;
+      sendText("Engine is turned ON");
+  	}
   	// Turn on GPS in case it was disabled
   	if (GPSflag == false) {
   		 if (!fona.enableGPS(true))
@@ -860,12 +884,7 @@ void ProcessSMS () {
 			if (vbat < 3600) {
 				// turn on charging
 				digitalWrite(PWR_GATE,LOW);
-				printlogln(F("Turned Charger ON"));
-				  if (!fona.sendSMS("84050685", "Turned Charger ON")) {
-					printlogln(F("ERROR could not send SMS"));
-				  } else {
-					printlogln(F("SMS sent with message"));
-				  }
+				sendText("Turned Charger ON when checking SMS");
 			}
 		}
 		  
@@ -905,8 +924,7 @@ void ProcessSMS () {
 		  printlogln("ERROR failed getSMSSender!");
 		}
 		else {
-		  char sender[255];
-		  strcpy(sender, replybuffer);
+		  char *sender = 	replybuffer + 4; // remove 4 digits +506 from number
 		  printlog(F("FROM: ")); printlogln(sender);
 		  
 		  if (fona.deleteSMS(smsid)) {
@@ -1129,7 +1147,7 @@ void ProcessSMS () {
 
 
 	if (!engineflag && SIMflag == true) {
-		printlogln(F("Turn off SIM808 via PWRKEY"));
+		    printlogln(F("Turn off SIM808 via PWRKEY"));
         SimTogglePWRKEY();
         SIMflag = false;
 	}
@@ -1289,25 +1307,26 @@ bool HTTPPost() {
 				pdata.print("}");
 			 
 				printlogln(data);
+
+				char sms[140];
+				PString psms(sms,140);
+				psms.print("Gast:");
+				psms.print(fGasTime);
+				psms.print(",LPGt:");
+				psms.print(fLPGTime);
+				psms.print(",Gasl:");
+				psms.print(fGasLiters);
+				psms.print(",LPGl:");
+				psms.print(fLPGLiters);    
+       			
+				sendText(sms);
+				delay(5000);
+				
 				success = false;
 				printlogln(F("POSTing data.."));
 				
 				if (fona.HTTP_POST_start(serverurl, F("application/json"), (uint8_t *) data, strlen(pdata), &statuscode, (uint16_t *)&lengthp)) {
 				  success = true;
-				}
-				else {
-					printlogln("Failed HTTP POST! Wait 5 seconds to get error and continue");
-					if (!fona.sendSMS("84050685", "Failed HTTP POST")) {
-					  printlogln(F("ERROR could not send SMS"));
-					} else {
-					  printlogln(F("SMS sent with error message"));
-					}
-					delay(5000);
-					fona.HTTP_POST_end();
-				}
-				  
-				if (success == true) {
-				
 				  while (lengthp > 0) {
 					while (fona.available()) {
 					  char c = fona.read();
@@ -1317,6 +1336,7 @@ bool HTTPPost() {
 					  if (! lengthp) break;
 					}
 				  }
+			  			  
 				  printlogln("");
 				  printlogln(F("POSTing success"));
 				  printlogln(F("\n\n****"));
@@ -1340,9 +1360,15 @@ bool HTTPPost() {
 				  //elapsedmillis = 0; counter should not be reset - Ricardo 13 March 2020
 				  fGasLiters = 0;
 				  fLPGLiters = 0;
-
-				
-			  } // HTTP POST
+				  
+				}
+				else {
+					printlogln(F("Failed HTTP POST! Wait 5 seconds to get error and continue"));
+					sendText("Failed HTTP POST");
+					delay(5000);
+					fona.HTTP_POST_end();
+				}
+				 // HTTP POST
 			}
 			   
 			   
@@ -1360,8 +1386,6 @@ bool HTTPPost() {
 		 
 		  datafile.close();
 		  logopen = false;
-
-
 
 	return success;
 }
@@ -1388,18 +1412,12 @@ bool CheckNetwork() {
   else {
     printlogln(F("Network Registered"));
     if (!fona.enableGPRS(true)) {
-        printlogln(F("Failed to turn GPRS!"));
-			if (!fona.sendSMS("84050685", "Failed Turn on GPRS")) {
-				printlogln(F("ERROR could not send SMS"));
-            } else {
-                printlogln(F("SMS sent with error message"));
-            }
-        return false;
+      sendText("Failed Turn on GPRS");
     } else {
       printlogln(F("GPRS Enabled!"));
-      return true;
+      
     }
-    
+    return true;
   }
 }
 
@@ -1419,8 +1437,16 @@ byte valueFromString(char *string,byte start, byte width)
   
   return value;  
 }  
-// TO DO:
-// figure how to keep battery supply . no easy way with current circuit.
+
+void sendText(char *msg)
+{
+	printlogln(msg);
+	if (!fona.sendSMS("84050685", msg)) {
+		printlogln(F("ERROR could not send SMS"));
+  	} else {
+  	    printlogln(F("SMS sent with message"));
+  	}
+}
 
 void SDCheckOpen() { 
   if (digitalRead(SD_DT) == HIGH) {
