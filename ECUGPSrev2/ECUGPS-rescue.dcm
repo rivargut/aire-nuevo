@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LM2941CT-ADJ
+D 100mA Low drop-out regulator, Adjustable Output, TO-92
+K REGULATOR LDO Adjustable
+F http://www.ti.com/lit/ds/symlink/lm2931-n.pdf
+$ENDCMP
+#
+#End Doc Library

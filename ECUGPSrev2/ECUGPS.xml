@@ -1,0 +1,2622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>C:\Users\WIndows\Documents\Personal\GPS project\ECUGPS board\ECUGPS\ECUGPSrev2\ECUGPS.sch</source>
+    <date>4/13/2020 8:37:52 PM</date>
+    <tool>Eeschema (5.1.4)-1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>ECU GPS</title>
+        <company>Ricardo Vargas Gutierrez</company>
+        <rev>1</rev>
+        <date>2019-09-02</date>
+        <source>ECUGPS.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="D8">
+      <value>ORANGE</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">LTST-C170KFKT</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="LED0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>05F7409B</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>GREEN</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">150080VS75000</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="LED0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>A8DCC714</tstamp>
+    </comp>
+    <comp ref="D10">
+      <value>MMSZ5231BT1G</value>
+      <footprint>Diode_SMD:D_SOD-123</footprint>
+      <fields>
+        <field name="Part">MSZ5231BT1G</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="DIODE-ZENERSOD123-ECUGPS-eagle-import-ECUGPS-rescue" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>7E07F09B</tstamp>
+    </comp>
+    <comp ref="C33">
+      <value>10pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10C100JB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F00129E</tstamp>
+    </comp>
+    <comp ref="C32">
+      <value>33pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10C330JB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>23144AAE</tstamp>
+    </comp>
+    <comp ref="C31">
+      <value>100uF</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <fields>
+        <field name="Part">CL31A107MQHNNNE</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="C-USC1210-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>7FB05C0A</tstamp>
+    </comp>
+    <comp ref="C25">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">0603ZD106KAT2A</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>BE642B3C</tstamp>
+    </comp>
+    <comp ref="PWRSTAT1">
+      <value>GREEN</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">150080VS75000</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="LED0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>E9EA7004</tstamp>
+    </comp>
+    <comp ref="NETSTAT1">
+      <value>BLUE</value>
+      <footprint>LED_SMD:LED_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">150080BS75000</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="LED0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>0A21873B</tstamp>
+    </comp>
+    <comp ref="R18">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EA075B7</tstamp>
+    </comp>
+    <comp ref="R19">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>B5D62C7B</tstamp>
+    </comp>
+    <comp ref="U12">
+      <value>SIM808</value>
+      <footprint>sim808:SIM900_SMT</footprint>
+      <fields>
+        <field name="Part">SIM808</field>
+        <field name="Vendor">https://www.win-source.net/hot-sales-and-eol-components-sim808.html</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="GSM_SIM808_LITERAL-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>D5B9066C</tstamp>
+    </comp>
+    <comp ref="L1">
+      <value>33nH</value>
+      <footprint>Inductors_SMD:L_0805</footprint>
+      <fields>
+        <field name="Part">CE201210-33NJ</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="INDUCTOR_0805MP-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>933560D2</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>Conn_02x05_Odd_Even</value>
+      <footprint>digikey-footprints:PinHeader_2x5_P1.27mm</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Part">20021121-00010C4LF</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Connector_Generic" part="Conn_02x05_Odd_Even" description="Generic connector, double row, 02x05, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5DAB1520</tstamp>
+    </comp>
+    <comp ref="U4">
+      <value>TJA1027T</value>
+      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <datasheet>http://www.nxp.com/documents/data_sheet/TJA1029.pdf</datasheet>
+      <fields>
+        <field name="Part">TJA1027T/20</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="TJA1029T-Interface_CAN_LIN" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5DC7CE1F</tstamp>
+    </comp>
+    <comp ref="C12">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E063F40</tstamp>
+    </comp>
+    <comp ref="C15">
+      <value>220pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B221KB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E09BE31</tstamp>
+    </comp>
+    <comp ref="C24">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">0603ZD106KAT2A</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E1A8B66</tstamp>
+    </comp>
+    <comp ref="R13">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E215072</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>MMBT3904</value>
+      <footprint>TO_SOT_Packages_SMD:SOT-23</footprint>
+      <datasheet>https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf</datasheet>
+      <fields>
+        <field name="Part">MMBT3904</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Transistor_BJT" part="MMBT3904" description="0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E365A97</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E367E4B</tstamp>
+    </comp>
+    <comp ref="D5">
+      <value>BAV16W</value>
+      <footprint>Diode_SMD:D_SOD-123</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/ds30086.pdf</datasheet>
+      <fields>
+        <field name="Part">BAV16W-7-F</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Diode" part="BAV16W" description="75V 0.15A Fast Switching Diode, SOD-123"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E36A917</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>MMBT3904</value>
+      <footprint>TO_SOT_Packages_SMD:SOT-23</footprint>
+      <datasheet>https://www.fairchildsemi.com/datasheets/2N/2N3904.pdf</datasheet>
+      <fields>
+        <field name="Part">MMBT3904</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Transistor_BJT" part="MMBT3904" description="0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E405CF6</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E405D00</tstamp>
+    </comp>
+    <comp ref="U10">
+      <value>TLV75733PDBVR</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-5</footprint>
+      <datasheet>http://www.ti.com/lit/ds/symlink/tlv755p.pdf</datasheet>
+      <fields>
+        <field name="Part">TLV75733PDBVR</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="TLV75533PDBV-Regulator_Linear" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E689589</tstamp>
+    </comp>
+    <comp ref="J4">
+      <value>microsd</value>
+      <footprint>Connectors_Card:Hirose_DM3D-SF</footprint>
+      <fields>
+        <field name="Part">M3D-SF(41)</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="MICROSD-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>C6325FEA</tstamp>
+    </comp>
+    <comp ref="X2">
+      <value>32.768</value>
+      <footprint>Crystals:Crystal_SMD_G8-2pin_3.2x1.5mm</footprint>
+      <fields>
+        <field name="Part">FC-135 32.7680KA-A5</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="XTAL-3.2X1.5-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>211F99F7</tstamp>
+    </comp>
+    <comp ref="C17">
+      <value>22pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CC0603JRNPO9BN220</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>D14D4BF0</tstamp>
+    </comp>
+    <comp ref="C14">
+      <value>22pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CC0603JRNPO9BN220</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>1A664D53</tstamp>
+    </comp>
+    <comp ref="C9">
+      <value>1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10A105KP8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>C8E3AF05</tstamp>
+    </comp>
+    <comp ref="C18">
+      <value>1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10A105KP8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>711FF4DB</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">0603ZD106KAT2A</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>4085EC5D</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>A5E7C4B6</tstamp>
+    </comp>
+    <comp ref="C10">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="0.1UF-25V(+80_-20%)(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC019</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>MCP2515</value>
+      <footprint>Housings_SOIC:SOIC-18W_7.5x11.6mm_Pitch1.27mm</footprint>
+      <fields>
+        <field name="Part">MCP2515T-I/SO</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="MCP2510SO-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC02B</tstamp>
+    </comp>
+    <comp ref="U3">
+      <value>MCP2551</value>
+      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <fields>
+        <field name="Part">MCP2551T-I/SN</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="MCP2551-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC031</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>100</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1000V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="100OHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC049</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>100</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1000V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="100OHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC04F</tstamp>
+    </comp>
+    <comp ref="C13">
+      <value>560pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B561KB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="560PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC055</tstamp>
+    </comp>
+    <comp ref="C16">
+      <value>560pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B561KB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="560PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC05B</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>4.7K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF4701V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="4.7KOHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC061</tstamp>
+    </comp>
+    <comp ref="C11">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="0.1UF-25V(+80_-20%)(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC067</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>PESD1CAN</value>
+      <footprint>TO_SOT_Packages_SMD:SOT-23</footprint>
+      <fields>
+        <field name="Part">PESD1CAN-UX</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="PESD1CAN-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC0EB</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>22pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CC0603JRNPO9BN220</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="22PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC091</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>22pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CC0603JRNPO9BN220</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="22PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC08B</tstamp>
+    </comp>
+    <comp ref="X1">
+      <value>16MHz</value>
+      <footprint>Crystal:Crystal_SMD_Abracon_ABM3B-4Pin_5.0x3.2mm</footprint>
+      <fields>
+        <field name="Part">ABM3B-16.000MHZ-B2-T</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CRYSTAL5X3-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5D6FC085</tstamp>
+    </comp>
+    <comp ref="C26">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E60CE69</tstamp>
+    </comp>
+    <comp ref="C27">
+      <value>1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10A105KP8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EBF05F3</tstamp>
+    </comp>
+    <comp ref="J5">
+      <value>Screw_Terminal_01x04</value>
+      <footprint>TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-4-2.54_1x04_P2.54mm_Horizontal</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Part">OSTVN04A150</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Connector" part="Screw_Terminal_01x04" description="Generic screw terminal, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EDC54DF</tstamp>
+    </comp>
+    <comp ref="D9">
+      <value>SMF05CT1G</value>
+      <footprint>Package_TO_SOT_SMD:SOT-363_SC-70-6</footprint>
+      <fields>
+        <field name="Part">SMF05CT1G</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="TVSARRAY_5LANE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>030E05C4</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>607D4452</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FB10C8E</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>300</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6GEYJ301V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="100OHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FB2FE24</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>USB_B_Micro</value>
+      <footprint>Libraries:GCT_USB3145-XX-X_REVB</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Part">1050170001</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Connector" part="USB_B_Micro" description="USB Micro Type B connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FC9DFE2</tstamp>
+    </comp>
+    <comp ref="K1">
+      <value>G5RL-K1A</value>
+      <footprint>digikey-footprints:Relay_SPST_Omron_G5RL</footprint>
+      <datasheet>https://www.omron.com/ecb/products/pdf/en-g5q.pdf</datasheet>
+      <fields>
+        <field name="Part">G5RL-K1A-E-DC12</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="G5RL-K1A-Relay" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E363EA8</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>SWITCH_TACT</value>
+      <footprint>sim808:EVQ-Q2</footprint>
+      <fields>
+        <field name="Part">EVQ-Q2B03W</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="SWITCH_TACT_SMTEVQPQ-Adafruit_SIM808_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FDF3729</tstamp>
+    </comp>
+    <comp ref="J7">
+      <value>uFL</value>
+      <footprint>Connector_Coaxial:U.FL_Molex_MCRF_73412-0110_Vertical</footprint>
+      <fields>
+        <field name="Part">0734120110</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="ANTENNA_U.FL-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>1B681306</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>604B9BB4</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5DE079CE</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5DF800DD</tstamp>
+    </comp>
+    <comp ref="J6">
+      <value>uFL</value>
+      <footprint>Connector_Coaxial:U.FL_Molex_MCRF_73412-0110_Vertical</footprint>
+      <fields>
+        <field name="Part">0734120110</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="ANTENNA_U.FL-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E58911E</tstamp>
+    </comp>
+    <comp ref="R17">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E758DF2</tstamp>
+    </comp>
+    <comp ref="C29">
+      <value>1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10A105KP8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E811316</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>FA6D7899</tstamp>
+    </comp>
+    <comp ref="D7">
+      <value>B360A-13-F‎</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <fields>
+        <field name="Part">B360A-13-F‎</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="MBRA140-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E4FB9FD</tstamp>
+    </comp>
+    <comp ref="R21">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EB3D3CB</tstamp>
+    </comp>
+    <comp ref="R20">
+      <value>300</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6GEYJ301V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="100OHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EB1A9C1</tstamp>
+    </comp>
+    <comp ref="Q3">
+      <value> DMP3099L-7  </value>
+      <footprint>Package_TO_SOT_SMD:SOT-23</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/DMP3099L.pdf</datasheet>
+      <libsource lib="Device" part="Q_PMOS_GSD" description="P-MOSFET transistor, gate/source/drain"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9E60A6</tstamp>
+    </comp>
+    <comp ref="D6">
+      <value>BAV16W</value>
+      <footprint>Diode_SMD:D_SOD-123</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/ds30086.pdf</datasheet>
+      <fields>
+        <field name="Part">BAV16W-7-F</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Diode" part="BAV16W" description="75V 0.15A Fast Switching Diode, SOD-123"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E3689A7</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>BAV16W</value>
+      <footprint>Diode_SMD:D_SOD-123</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/ds30086.pdf</datasheet>
+      <fields>
+        <field name="Part">BAV16W-7-F</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Diode" part="BAV16W" description="75V 0.15A Fast Switching Diode, SOD-123"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5ED7AD5E</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5ED7B3B0</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EE7681B</tstamp>
+    </comp>
+    <comp ref="C28">
+      <value>1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10A105KP8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EEB74BF</tstamp>
+    </comp>
+    <comp ref="C34">
+      <value>33pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10C330JB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6F989A19</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>ATSAMD21G_TQFP</value>
+      <footprint>Package_QFP:TQFP-48_7x7mm_P0.5mm</footprint>
+      <datasheet>http://ww1.microchip.com/downloads/en/DeviceDoc/SAM_D21_DA1_Family_Data%20Sheet_DS40001882E.pdf</datasheet>
+      <libsource lib="ECUGPS-rescue" part="ATSAMD21G_TQFP" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F32048F</tstamp>
+    </comp>
+    <comp ref="C20">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F3E05EF</tstamp>
+    </comp>
+    <comp ref="U6">
+      <value>74LVC1G17</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-5</footprint>
+      <datasheet>http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf</datasheet>
+      <libsource lib="74xGxx" part="74LVC1G17" description="Single Schmitt Buffer Gate, Low-Voltage CMOS"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E7896D2</tstamp>
+    </comp>
+    <comp ref="U5">
+      <value>74LVC1G17</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-5</footprint>
+      <datasheet>http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf</datasheet>
+      <libsource lib="74xGxx" part="74LVC1G17" description="Single Schmitt Buffer Gate, Low-Voltage CMOS"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E8591EA</tstamp>
+    </comp>
+    <comp ref="U7">
+      <value>74LVC1G17</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23-5</footprint>
+      <datasheet>http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf</datasheet>
+      <libsource lib="74xGxx" part="74LVC1G17" description="Single Schmitt Buffer Gate, Low-Voltage CMOS"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E859ABF</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>SMAJ15A-13-F</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/ds19005.pdf</datasheet>
+      <libsource lib="Device" part="D_Zener" description="Zener diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E929C6F</tstamp>
+    </comp>
+    <comp ref="C19">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E9517E7</tstamp>
+    </comp>
+    <comp ref="C30">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5E8F08F0</tstamp>
+    </comp>
+    <comp ref="R11">
+      <value>1.2M</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1204V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EAAA3C2</tstamp>
+    </comp>
+    <comp ref="R12">
+      <value>4.02M</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">RC0805FR-074M02L</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EAAA3CA</tstamp>
+    </comp>
+    <comp ref="U8">
+      <value>TLV379</value>
+      <footprint>Package_SO:TSOP-5_1.65x3.05mm_P0.95mm</footprint>
+      <datasheet>https://www.ti.com/lit/ds/symlink/tlv379.pdf</datasheet>
+      <libsource lib="Amplifier_Operational" part="NCS325" description="Single operational amplifier, 50uV Offset, 0.25uV/C, 35uA Zero-Drift, SOT-23-5"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EAAA3F7</tstamp>
+    </comp>
+    <comp ref="U11">
+      <value>LM2941CT-ADJ</value>
+      <footprint>Package_TO_SOT_THT:TO-220-5_Vertical</footprint>
+      <datasheet>http://www.ti.com/lit/ds/symlink/lm2941.pdf</datasheet>
+      <libsource lib="ECUGPS-rescue" part="LM2941CT-ADJ" description="100mA Low drop-out regulator, Adjustable Output, TO-92"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EC20F3B</tstamp>
+    </comp>
+    <comp ref="R16">
+      <value>1K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1001V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EE7C882</tstamp>
+    </comp>
+    <comp ref="R15">
+      <value>3.3K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF3301V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EE7D1A2</tstamp>
+    </comp>
+    <comp ref="Q4">
+      <value>BSS138</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23</footprint>
+      <datasheet>https://www.fairchildsemi.com/datasheets/BS/BSS138.pdf</datasheet>
+      <libsource lib="Transistor_FET" part="BSS138" description="50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F02BEA0</tstamp>
+    </comp>
+    <comp ref="R22">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F05311F</tstamp>
+    </comp>
+    <comp ref="R24">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F074CD2</tstamp>
+    </comp>
+    <comp ref="C22">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">0603ZD106KAT2A</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F190783</tstamp>
+    </comp>
+    <comp ref="R14">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F19078F</tstamp>
+    </comp>
+    <comp ref="D11">
+      <value>SMAJ15A-13-F</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/ds19005.pdf</datasheet>
+      <libsource lib="Device" part="D_Zener" description="Zener diode"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F1907A6</tstamp>
+    </comp>
+    <comp ref="Q5">
+      <value>BSS138</value>
+      <footprint>Package_TO_SOT_SMD:SOT-23</footprint>
+      <datasheet>https://www.fairchildsemi.com/datasheets/BS/BSS138.pdf</datasheet>
+      <libsource lib="Transistor_FET" part="BSS138" description="50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F1907BC</tstamp>
+    </comp>
+    <comp ref="R23">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F1907C8</tstamp>
+    </comp>
+    <comp ref="R25">
+      <value>12K</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <fields>
+        <field name="Part">ERJ-6ENF1202V</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F1907D4</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>Screw_Terminal_01x04</value>
+      <footprint>TerminalBlock_Phoenix:TerminalBlock_Phoenix_MPT-0,5-4-2.54_1x04_P2.54mm_Horizontal</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="Part">OSTVN04A150</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="Connector" part="Screw_Terminal_01x04" description="Generic screw terminal, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F20D1CC</tstamp>
+    </comp>
+    <comp ref="C21">
+      <value>220pF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B221KB8NNNC</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5F42FA2F</tstamp>
+    </comp>
+    <comp ref="J8">
+      <value>SIM8060-6-0-14-00-A</value>
+      <footprint>GCT_SIM8060-6-0-14-00-A</footprint>
+      <datasheet>Package Analog Devices</datasheet>
+      <fields>
+        <field name="Field4">Global Connector Technology</field>
+        <field name="Field7">SIM8060-6-0-14-00-A</field>
+        <field name="Field8">SIM8060 is a hinged Sim Card Connector. With 6 contacts, with switch for card detection. Profile above PCB is 1.43mm.</field>
+      </fields>
+      <libsource lib="SIM8060-6-0-14-00-A" part="SIM8060-6-0-14-00-A" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FAB122D</tstamp>
+    </comp>
+    <comp ref="CN1">
+      <value>JST_2PIN</value>
+      <footprint>Connector_JST:JST_PH_S2B-PH-SM4-TB_1x02-1MP_P2.00mm_Horizontal</footprint>
+      <libsource lib="ECUGPS-rescue" part="JST_2PIN" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FC3D361</tstamp>
+    </comp>
+    <comp ref="C23">
+      <value>0.1uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Part">CL10B104KB8NNNL</field>
+        <field name="Vendor">DigiKey</field>
+      </fields>
+      <libsource lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import" description=""/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5FEC1EED</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="74xGxx" part="74LVC1G17">
+      <aliases>
+        <alias>74AUC1G17</alias>
+        <alias>74AUP1G17</alias>
+      </aliases>
+      <description>Single Schmitt Buffer Gate, Low-Voltage CMOS</description>
+      <docs>http://www.ti.com/lit/sg/scyt129e/scyt129e.pdf</docs>
+      <footprints>
+        <fp>SOT*</fp>
+        <fp>SG-*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">74LVC1G17</field>
+      </fields>
+      <pins>
+        <pin num="2" name="~" type="input"/>
+        <pin num="3" name="GND" type="power_in"/>
+        <pin num="4" name="~" type="output"/>
+        <pin num="5" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Amplifier_Operational" part="NCS325">
+      <description>Single operational amplifier, 50uV Offset, 0.25uV/C, 35uA Zero-Drift, SOT-23-5</description>
+      <docs>http://www.onsemi.com/pub/Collateral/NCS325-D.PDF</docs>
+      <footprints>
+        <fp>SOT?23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">NCS325</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23-5</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="output"/>
+        <pin num="2" name="V-" type="power_in"/>
+        <pin num="3" name="+" type="input"/>
+        <pin num="4" name="-" type="input"/>
+        <pin num="5" name="V+" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="Screw_Terminal_01x04">
+      <description>Generic screw terminal, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>TerminalBlock*:*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Screw_Terminal_01x04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="USB_B_Micro">
+      <aliases>
+        <alias>USB_B_Mini</alias>
+      </aliases>
+      <description>USB Micro Type B connector</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>USB*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">USB_B_Micro</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VBUS" type="power_out"/>
+        <pin num="2" name="D-" type="passive"/>
+        <pin num="3" name="D+" type="passive"/>
+        <pin num="4" name="ID" type="passive"/>
+        <pin num="5" name="GND" type="power_out"/>
+        <pin num="6" name="Shield" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_02x05_Odd_Even">
+      <description>Generic connector, double row, 02x05, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_2x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_02x05_Odd_Even</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+        <pin num="10" name="Pin_10" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="D_Zener">
+      <description>Zener diode</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>TO-???*</fp>
+        <fp>*_Diode_*</fp>
+        <fp>*SingleDiode*</fp>
+        <fp>D_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D_Zener</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="Q_PMOS_GSD">
+      <description>P-MOSFET transistor, gate/source/drain</description>
+      <docs>~</docs>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">Q_PMOS_GSD</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="input"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="D" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Diode" part="MMSD914">
+      <aliases>
+        <alias>1N4148W</alias>
+        <alias>BAV16W</alias>
+        <alias>1N4448W</alias>
+        <alias>MMSD4148</alias>
+      </aliases>
+      <description>100V 0.2A Switching Diode, SOD-123</description>
+      <docs>https://www.onsemi.com/pub/Collateral/MMSD914T1-D.PDF</docs>
+      <footprints>
+        <fp>D*SOD?123*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">MMSD914</field>
+        <field name="Footprint">Diode_SMD:D_SOD-123</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="0.1UF-25V(+80_-20%)(0603)-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">0.1UF-25V(+80_-20%)(0603)-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="100OHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">100OHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="22PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">22PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="4.7KOHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">4.7KOHM-1_10W-1%(0603)-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="560PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">560PF-50V-5%(0603)-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="ANTENNA_U.FL-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">ANTENNA_U.FL-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="SIGNAL" type="passive"/>
+        <pin num="2" name="GND@0" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="ATSAMD21G_TQFP">
+      <fields>
+        <field name="Value">ATSAMD21G_TQFP</field>
+      </fields>
+      <pins>
+        <pin num="1" name="PA00/EINT0/SERCOM1.0" type="BiDi"/>
+        <pin num="2" name="PA01/EINT1/SERCOM1.1" type="BiDi"/>
+        <pin num="3" name="PA02/EINT2/AIN0/Y0/VOUT" type="BiDi"/>
+        <pin num="4" name="PA03/EINT3/VREFA/AIN1" type="BiDi"/>
+        <pin num="5" name="GNDA" type="power_in"/>
+        <pin num="6" name="VDDA" type="power_in"/>
+        <pin num="7" name="PB08/I8/AIN2/SERCOM4.0" type="BiDi"/>
+        <pin num="8" name="PB09/I9/AIN3/SERCOM4.1" type="BiDi"/>
+        <pin num="9" name="PA04/EINT4/VREFB/AIN4/SERCOM0.0" type="BiDi"/>
+        <pin num="10" name="PA05/EINT5/AIN5/SERCOM0.1" type="BiDi"/>
+        <pin num="11" name="PA06/EINT6/AIN6/SERCOM0.2" type="BiDi"/>
+        <pin num="12" name="PA07/I7/AIN7/SERCOM0.3/I2SD0" type="BiDi"/>
+        <pin num="13" name="PA08/I2C/AIN16/SERCOM0+2.0/I2SD1" type="BiDi"/>
+        <pin num="14" name="PA09/I2C/I9/AIN17/SERCOM0+2.1/I2SMC" type="BiDi"/>
+        <pin num="15" name="PA10/I10/AIN18/SERCOM0+2.2/I2SCK" type="BiDi"/>
+        <pin num="16" name="PA11/I11/AIN19/SERCOM0+2.3/I2SF0" type="BiDi"/>
+        <pin num="17" name="VDDIO" type="power_in"/>
+        <pin num="18" name="GND" type="power_in"/>
+        <pin num="19" name="PB10/I10/SERCOM4.2/I2SMC" type="BiDi"/>
+        <pin num="20" name="PB11/I11/SERCOM4.3/I2SCL" type="BiDi"/>
+        <pin num="21" name="PA12/I12/I2C/SERCOM2+4.0" type="BiDi"/>
+        <pin num="22" name="PA13/I13/I2C/SERCOM2+4.1" type="BiDi"/>
+        <pin num="23" name="PA14/I14/SERCOM2+4.2" type="BiDi"/>
+        <pin num="24" name="PA15/I15/SERCOM3+4.3" type="BiDi"/>
+        <pin num="25" name="PA16/I2C/I0/SERCOM1+3.0" type="BiDi"/>
+        <pin num="26" name="PA17/I2C/I1/SERCOM1+3.1" type="BiDi"/>
+        <pin num="27" name="PA18/I2/SERCOM1+3.2" type="BiDi"/>
+        <pin num="28" name="PA19/I3/SERCOM1+3.3/I2SD0" type="BiDi"/>
+        <pin num="29" name="PA20/I4/SERCOM3+5.2/I2SSC" type="BiDi"/>
+        <pin num="30" name="PA21/I5/SERCOM3+5.3/I2SFS0" type="BiDi"/>
+        <pin num="31" name="PA22/I2C/I6/SERCOM3+5.0" type="BiDi"/>
+        <pin num="32" name="PA23/I2C/I7/SERCOM3+5.1/SOF" type="BiDi"/>
+        <pin num="33" name="PA24/I12/SERCOM3+5.2/D-" type="BiDi"/>
+        <pin num="34" name="PA25/I13/SERCOM3+5.3/D+" type="BiDi"/>
+        <pin num="35" name="GND" type="power_in"/>
+        <pin num="36" name="VDDIO" type="power_in"/>
+        <pin num="37" name="PB22/I6/SERCOM5.2" type="BiDi"/>
+        <pin num="38" name="PB23/I7/SERCOM5.3" type="BiDi"/>
+        <pin num="39" name="PA27/I15" type="BiDi"/>
+        <pin num="40" name="/RESET" type="BiDi"/>
+        <pin num="41" name="PA28/I8" type="BiDi"/>
+        <pin num="42" name="GND" type="power_in"/>
+        <pin num="43" name="VDDCORE" type="power_in"/>
+        <pin num="44" name="VDDIN" type="power_in"/>
+        <pin num="45" name="PA30/I10/SECOM1.2/SWCLK" type="BiDi"/>
+        <pin num="46" name="PA31/I11/SECOM1.3/SWDIO" type="BiDi"/>
+        <pin num="47" name="PB02/I2/AIN10/SERCOM5.0" type="BiDi"/>
+        <pin num="48" name="PB03/I3/AIN11/SERCOM5.1" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="C-USC1210-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C-USC1210-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CAP_CERAMIC0603_NO-Adafruit_Feather_M0_Adalogger-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-Adafruit_Feather_M0_Adalogger-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CAP_CERAMIC0805-NOOUTLINE-Adafruit_Feather_M0_Adalogger-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CAP_CERAMIC0805-NOOUTLINE-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="CRYSTAL5X3-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">Y</field>
+        <field name="Value">CRYSTAL5X3-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="2" type="passive"/>
+        <pin num="4" name="GND" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="DIODE-ZENERSOD123-ECUGPS-eagle-import-ECUGPS-rescue">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">DIODE-ZENERSOD123-ECUGPS-eagle-import-ECUGPS-rescue</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="G5RL-K1A-Relay">
+      <footprints>
+        <fp>Relay*SPST*Omron*G5Q*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">K</field>
+        <field name="Value">G5RL-K1A-Relay</field>
+        <field name="Footprint">Relay_THT:Relay_SPST_Omron-G5Q-1A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="R" type="passive"/>
+        <pin num="3" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+        <pin num="5" name="~" type="passive"/>
+        <pin num="6" name="~" type="passive"/>
+        <pin num="8" name="S" type="passive"/>
+        <pin num="9" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="GSM_SIM808_LITERAL-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">GSM_SIM808_LITERAL-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="P$1" name="GND@1" type="power_in"/>
+        <pin num="P$2" name="GND@2" type="power_in"/>
+        <pin num="P$3" name="GND@3" type="power_in"/>
+        <pin num="P$4" name="VBAT@1" type="power_in"/>
+        <pin num="P$5" name="VBAT@2" type="power_in"/>
+        <pin num="P$6" name="VBAT@3" type="power_in"/>
+        <pin num="P$7" name="VDD_EXT(2.8VOUT)" type="power_in"/>
+        <pin num="P$8" name="PWRKEY" type="input"/>
+        <pin num="P$9" name="DTR" type="input"/>
+        <pin num="P$10" name="RI" type="output"/>
+        <pin num="P$11" name="DCD" type="output"/>
+        <pin num="P$12" name="CTS" type="output"/>
+        <pin num="P$13" name="RTS" type="input"/>
+        <pin num="P$14" name="TXD" type="output"/>
+        <pin num="P$15" name="RXD" type="input"/>
+        <pin num="P$16" name="RESET" type="input"/>
+        <pin num="P$17" name="VRTC" type="power_in"/>
+        <pin num="P$18" name="GND@4" type="power_in"/>
+        <pin num="P$19" name="MIC1P" type="input"/>
+        <pin num="P$20" name="MIC1N" type="input"/>
+        <pin num="P$21" name="SPK1P" type="output"/>
+        <pin num="P$22" name="SPK1N" type="output"/>
+        <pin num="P$23" name="ADC1" type="input"/>
+        <pin num="P$24" name="ADC2" type="input"/>
+        <pin num="P$25" name="VBUS" type="power_in"/>
+        <pin num="P$26" name="USB_DP" type="BiDi"/>
+        <pin num="P$27" name="USB_DM" type="BiDi"/>
+        <pin num="P$28" name="GND@5" type="power_in"/>
+        <pin num="P$29" name="SIM_VDD" type="power_in"/>
+        <pin num="P$30" name="SIM_DATA" type="BiDi"/>
+        <pin num="P$31" name="SIM_CLK" type="output"/>
+        <pin num="P$32" name="SIM_RST" type="output"/>
+        <pin num="P$33" name="SIM_PRE" type="input"/>
+        <pin num="P$34" name="GND@6" type="power_in"/>
+        <pin num="P$35" name="GPS_RF_IN" type="BiDi"/>
+        <pin num="P$36" name="GND@7" type="power_in"/>
+        <pin num="P$37" name="1PPS" type="input"/>
+        <pin num="P$38" name="SDA" type="BiDi"/>
+        <pin num="P$39" name="SCL" type="output"/>
+        <pin num="P$40" name="GND@8" type="power_in"/>
+        <pin num="P$41" name="PWM2" type="output"/>
+        <pin num="P$42" name="PWM1" type="output"/>
+        <pin num="P$43" name="GPIO5" type="BiDi"/>
+        <pin num="P$44" name="GPIO6" type="BiDi"/>
+        <pin num="P$45" name="PCM_SYNC" type="output"/>
+        <pin num="P$46" name="PCM_CLK" type="input"/>
+        <pin num="P$47" name="PCM_IN" type="input"/>
+        <pin num="P$48" name="PCM_OUT" type="output"/>
+        <pin num="P$49" name="STATUS" type="output"/>
+        <pin num="P$50" name="NETLIGHT" type="output"/>
+        <pin num="P$51" name="GND@9" type="power_in"/>
+        <pin num="P$52" name="GND@10" type="power_in"/>
+        <pin num="P$53" name="ANT_BT" type="BiDi"/>
+        <pin num="P$54" name="GND@11" type="power_in"/>
+        <pin num="P$55" name="ROW3" type="output"/>
+        <pin num="P$56" name="ROW2" type="output"/>
+        <pin num="P$57" name="ROW1" type="output"/>
+        <pin num="P$58" name="ROW0" type="output"/>
+        <pin num="P$59" name="COL3" type="input"/>
+        <pin num="P$60" name="COL2" type="input"/>
+        <pin num="P$61" name="COL1" type="input"/>
+        <pin num="P$62" name="COL0" type="input"/>
+        <pin num="P$63" name="RF_SYNC" type="output"/>
+        <pin num="P$64" name="GND@12" type="power_in"/>
+        <pin num="P$65" name="GND@13" type="power_in"/>
+        <pin num="P$66" name="GSM_RF_IN" type="input"/>
+        <pin num="P$67" name="GND@14" type="power_in"/>
+        <pin num="P$68" name="GND@15" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="INDUCTOR_0805MP-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">INDUCTOR_0805MP-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="JST_2PIN">
+      <fields>
+        <field name="Reference">CN</field>
+        <field name="Value">JST_2PIN</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="MP" name="MP" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="LED0805_NOOUTLINE-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED0805_NOOUTLINE-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="C" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="LM2941CT-ADJ">
+      <description>100mA Low drop-out regulator, Adjustable Output, TO-92</description>
+      <docs>http://www.ti.com/lit/ds/symlink/lm2931-n.pdf</docs>
+      <footprints>
+        <fp>TO?92*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LM2941CT-ADJ</field>
+        <field name="Footprint">Package_TO_SOT_THT:TO-92_Inline</field>
+      </fields>
+      <pins>
+        <pin num="1" name="ADJ" type="input"/>
+        <pin num="2" name="ONOFF" type="input"/>
+        <pin num="3" name="GND" type="passive"/>
+        <pin num="4" name="IN" type="power_in"/>
+        <pin num="5" name="OUT" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="MBRA140-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">MBRA140-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="MCP2510SO-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MCP2510SO-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="TXCAN" type="output"/>
+        <pin num="2" name="RXCAN" type="input"/>
+        <pin num="3" name="CLKOUT" type="output"/>
+        <pin num="4" name="TX0RTS" type="input"/>
+        <pin num="5" name="TX1RTS" type="input"/>
+        <pin num="6" name="TX2RTS" type="input"/>
+        <pin num="7" name="OSC2" type="output"/>
+        <pin num="8" name="OSC1" type="input"/>
+        <pin num="9" name="VSS" type="power_in"/>
+        <pin num="10" name="RX1BF" type="output"/>
+        <pin num="11" name="RX0BF" type="output"/>
+        <pin num="12" name="INT" type="output"/>
+        <pin num="13" name="SCK" type="input"/>
+        <pin num="14" name="SI" type="input"/>
+        <pin num="15" name="SO" type="output"/>
+        <pin num="16" name="CS" type="input"/>
+        <pin num="17" name="RESET" type="input"/>
+        <pin num="18" name="VDD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="MCP2551-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">MCP2551-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="TXD" type="BiDi"/>
+        <pin num="2" name="VSS" type="BiDi"/>
+        <pin num="3" name="VDD" type="BiDi"/>
+        <pin num="4" name="RXD" type="BiDi"/>
+        <pin num="5" name="VREF" type="BiDi"/>
+        <pin num="6" name="CANL" type="BiDi"/>
+        <pin num="7" name="CANH" type="BiDi"/>
+        <pin num="8" name="RS" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="MICROSD-Adafruit_Feather_M0_Adalogger-eagle-import">
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">MICROSD-Adafruit_Feather_M0_Adalogger-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="DAT2" type="BiDi"/>
+        <pin num="2" name="CS" type="input"/>
+        <pin num="3" name="DATA_IN" type="input"/>
+        <pin num="4" name="SD_VDD" type="power_in"/>
+        <pin num="5" name="SCLK" type="input"/>
+        <pin num="6" name="GND@3" type="power_in"/>
+        <pin num="7" name="DATA_OUT" type="output"/>
+        <pin num="8" name="DAT1" type="BiDi"/>
+        <pin num="9" name="CARD_DETECT" type="passive"/>
+        <pin num="10" name="CARD_DETECT1" type="passive"/>
+        <pin num="11" name="GND@1" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="PESD1CAN-SparkFun_CAN-Bus_Shield-eagle-import">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">PESD1CAN-SparkFun_CAN-Bus_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="BiDi"/>
+        <pin num="2" name="2" type="BiDi"/>
+        <pin num="3" name="3" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">RESISTOR0805_NOOUTLINE-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="SWITCH_TACT_SMTEVQPQ-Adafruit_SIM808_Shield-eagle-import">
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SWITCH_TACT_SMTEVQPQ-Adafruit_SIM808_Shield-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="A" name="P" type="passive"/>
+        <pin num="A'" name="P1" type="passive"/>
+        <pin num="B" name="S" type="passive"/>
+        <pin num="B'" name="S1" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="TJA1029T-Interface_CAN_LIN">
+      <footprints>
+        <fp>SOIC*3.9x4.9mm*P1.27mm*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TJA1029T-Interface_CAN_LIN</field>
+        <field name="Footprint">Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RXD" type="input"/>
+        <pin num="2" name="~SLP~" type="input"/>
+        <pin num="3" name="NC" type="NotConnected"/>
+        <pin num="4" name="TXD" type="output"/>
+        <pin num="5" name="GND" type="power_in"/>
+        <pin num="6" name="LIN" type="BiDi"/>
+        <pin num="7" name="VBAT" type="power_in"/>
+        <pin num="8" name="NC" type="NotConnected"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="TLV75533PDBV-Regulator_Linear">
+      <footprints>
+        <fp>SOT?23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TLV75533PDBV-Regulator_Linear</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23-5</field>
+      </fields>
+      <pins>
+        <pin num="1" name="IN" type="power_in"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="EN" type="input"/>
+        <pin num="4" name="NC" type="NotConnected"/>
+        <pin num="5" name="OUT" type="power_out"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="TVSARRAY_5LANE-ECUGPS-eagle-import">
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">TVSARRAY_5LANE-ECUGPS-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="C1" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+        <pin num="3" name="C2" type="passive"/>
+        <pin num="4" name="C3" type="passive"/>
+        <pin num="5" name="C4" type="passive"/>
+        <pin num="6" name="C5" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="ECUGPS-rescue" part="XTAL-3.2X1.5-Adafruit_Feather_M0_Adalogger-eagle-import">
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">XTAL-3.2X1.5-Adafruit_Feather_M0_Adalogger-eagle-import</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="BiDi"/>
+        <pin num="2" name="2" type="BiDi"/>
+      </pins>
+    </libpart>
+    <libpart lib="SIM8060-6-0-14-00-A" part="SIM8060-6-0-14-00-A">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">SIM8060-6-0-14-00-A</field>
+        <field name="Footprint">GCT_SIM8060-6-0-14-00-A</field>
+        <field name="Datasheet">Package Analog Devices</field>
+        <field name="Field4">Global Connector Technology</field>
+        <field name="Field7">SIM8060-6-0-14-00-A</field>
+        <field name="Field8">SIM8060 is a hinged Sim Card Connector. With 6 contacts, with switch for card detection. Profile above PCB is 1.43mm.</field>
+      </fields>
+      <pins>
+        <pin num="C1" name="VCC" type="passive"/>
+        <pin num="C2" name="RST" type="passive"/>
+        <pin num="C3" name="CLK" type="passive"/>
+        <pin num="C5" name="GND" type="passive"/>
+        <pin num="C6" name="VPP" type="passive"/>
+        <pin num="C7" name="IO" type="passive"/>
+        <pin num="S1" name="SHIELD" type="passive"/>
+        <pin num="S2" name="SHIELD" type="passive"/>
+        <pin num="S3" name="SHIELD" type="passive"/>
+        <pin num="S4" name="SHIELD" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Transistor_BJT" part="BC817">
+      <aliases>
+        <alias>BC818</alias>
+        <alias>BC847</alias>
+        <alias>BC848</alias>
+        <alias>BC849</alias>
+        <alias>BC850</alias>
+        <alias>MMBT3904</alias>
+        <alias>MMBT5550L</alias>
+        <alias>MMBT5551L</alias>
+      </aliases>
+      <description>0.8A Ic, 45V Vce, NPN Transistor, SOT-23</description>
+      <docs>http://www.fairchildsemi.com/ds/BC/BC817.pdf</docs>
+      <footprints>
+        <fp>SOT?23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">BC817</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23</field>
+      </fields>
+      <pins>
+        <pin num="1" name="B" type="input"/>
+        <pin num="2" name="E" type="passive"/>
+        <pin num="3" name="C" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Transistor_FET" part="BSS138">
+      <aliases>
+        <alias>2N7002</alias>
+        <alias>2N7002E</alias>
+        <alias>2N7002H</alias>
+        <alias>2N7002K</alias>
+        <alias>BS170F</alias>
+        <alias>BS870</alias>
+        <alias>BSN20</alias>
+        <alias>BSS123</alias>
+        <alias>BSS127S</alias>
+        <alias>DMG2302U</alias>
+        <alias>DMG3402L</alias>
+        <alias>DMG3404L</alias>
+        <alias>DMG3406L</alias>
+        <alias>DMG3414U</alias>
+        <alias>DMG3418L</alias>
+        <alias>DMN10H220L</alias>
+        <alias>DMN10H700S</alias>
+        <alias>DMN13H750S</alias>
+        <alias>DMN2041L</alias>
+        <alias>DMN2050L</alias>
+        <alias>DMN2056U</alias>
+        <alias>DMN2058U</alias>
+        <alias>DMN2075U</alias>
+        <alias>DMN2230U</alias>
+        <alias>DMN24H11DS</alias>
+        <alias>DMN24H3D5L</alias>
+        <alias>DMN3042L</alias>
+        <alias>DMN3051L</alias>
+        <alias>DMN30H4D0L</alias>
+        <alias>DMN3110S</alias>
+        <alias>DMN3150L</alias>
+        <alias>DMN3300U</alias>
+        <alias>DMN3404L</alias>
+        <alias>DMN6075S</alias>
+        <alias>DMN6140L</alias>
+        <alias>DMN67D7L</alias>
+        <alias>DMN67D8L</alias>
+        <alias>MMBF170</alias>
+        <alias>VN10LF</alias>
+        <alias>ZVN3306F</alias>
+        <alias>ZVN3310F</alias>
+        <alias>ZVN3320F</alias>
+        <alias>ZVN4106F</alias>
+        <alias>ZXM61N02F</alias>
+        <alias>ZXM61N03F</alias>
+        <alias>ZXMN10A07F</alias>
+        <alias>ZXMN2A01F</alias>
+        <alias>ZXMN2A14F</alias>
+        <alias>ZXMN2B01F</alias>
+        <alias>ZXMN2B14FH</alias>
+        <alias>ZXMN2F30FH</alias>
+        <alias>ZXMN2F34FH</alias>
+        <alias>ZXMN3A01F</alias>
+        <alias>ZXMN3A14F</alias>
+        <alias>ZXMN3B01F</alias>
+        <alias>ZXMN3B14F</alias>
+        <alias>ZXMN3F30FH</alias>
+        <alias>ZXMN6A07F</alias>
+        <alias>IRLML2060</alias>
+      </aliases>
+      <description>50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23</description>
+      <docs>https://www.fairchildsemi.com/datasheets/BS/BSS138.pdf</docs>
+      <footprints>
+        <fp>SOT?23*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">BSS138</field>
+        <field name="Footprint">Package_TO_SOT_SMD:SOT-23</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="input"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="D" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="74xGxx">
+      <uri>C:\Program Files\KiCad\share\kicad\library/74xGxx.lib</uri>
+    </library>
+    <library logical="Amplifier_Operational">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Amplifier_Operational.lib</uri>
+    </library>
+    <library logical="Connector">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Connector.lib</uri>
+    </library>
+    <library logical="Connector_Generic">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Connector_Generic.lib</uri>
+    </library>
+    <library logical="Device">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Device.lib</uri>
+    </library>
+    <library logical="Diode">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Diode.lib</uri>
+    </library>
+    <library logical="ECUGPS-rescue">
+      <uri>C:\Users\WIndows\Documents\Personal\GPS project\ECUGPS board\ECUGPS\ECUGPSrev2/ECUGPS-rescue.lib</uri>
+    </library>
+    <library logical="SIM8060-6-0-14-00-A">
+      <uri>C:/Users/WIndows/Documents/Personal/GPS project/ECUGPS board/Libraries/SIM8060-6-0-14-00-A.lib</uri>
+    </library>
+    <library logical="Transistor_BJT">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Transistor_BJT.lib</uri>
+    </library>
+    <library logical="Transistor_FET">
+      <uri>C:\Program Files\KiCad\share\kicad\library/Transistor_FET.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="U12" pin="P$2"/>
+      <node ref="U12" pin="P$18"/>
+      <node ref="R16" pin="1"/>
+      <node ref="D11" pin="2"/>
+      <node ref="U12" pin="P$40"/>
+      <node ref="U12" pin="P$36"/>
+      <node ref="U12" pin="P$1"/>
+      <node ref="U12" pin="P$34"/>
+      <node ref="U12" pin="P$3"/>
+      <node ref="U12" pin="P$28"/>
+      <node ref="D10" pin="2"/>
+      <node ref="C31" pin="2"/>
+      <node ref="C32" pin="2"/>
+      <node ref="C33" pin="2"/>
+      <node ref="C12" pin="2"/>
+      <node ref="J8" pin="C5"/>
+      <node ref="U11" pin="3"/>
+      <node ref="C2" pin="1"/>
+      <node ref="C1" pin="1"/>
+      <node ref="C5" pin="2"/>
+      <node ref="D2" pin="3"/>
+      <node ref="C7" pin="1"/>
+      <node ref="SW1" pin="A"/>
+      <node ref="SW1" pin="A'"/>
+      <node ref="J7" pin="2"/>
+      <node ref="J7" pin="2"/>
+      <node ref="C25" pin="2"/>
+      <node ref="C22" pin="2"/>
+      <node ref="D3" pin="1"/>
+      <node ref="D8" pin="1"/>
+      <node ref="NETSTAT1" pin="1"/>
+      <node ref="PWRSTAT1" pin="1"/>
+      <node ref="J2" pin="5"/>
+      <node ref="C15" pin="2"/>
+      <node ref="C11" pin="1"/>
+      <node ref="R3" pin="1"/>
+      <node ref="C16" pin="1"/>
+      <node ref="C13" pin="1"/>
+      <node ref="J2" pin="6"/>
+      <node ref="C20" pin="2"/>
+      <node ref="C19" pin="2"/>
+      <node ref="U6" pin="3"/>
+      <node ref="U5" pin="3"/>
+      <node ref="C21" pin="2"/>
+      <node ref="J1" pin="9"/>
+      <node ref="C30" pin="2"/>
+      <node ref="U8" pin="2"/>
+      <node ref="U2" pin="42"/>
+      <node ref="U7" pin="3"/>
+      <node ref="R12" pin="2"/>
+      <node ref="U2" pin="5"/>
+      <node ref="D4" pin="2"/>
+      <node ref="U2" pin="35"/>
+      <node ref="Q1" pin="2"/>
+      <node ref="J8" pin="S2"/>
+      <node ref="J8" pin="S3"/>
+      <node ref="J8" pin="S4"/>
+      <node ref="CN1" pin="MP"/>
+      <node ref="C23" pin="2"/>
+      <node ref="CN1" pin="1"/>
+      <node ref="J8" pin="S1"/>
+      <node ref="U4" pin="5"/>
+      <node ref="U12" pin="P$52"/>
+      <node ref="U12" pin="P$54"/>
+      <node ref="U12" pin="P$51"/>
+      <node ref="U12" pin="P$68"/>
+      <node ref="U12" pin="P$67"/>
+      <node ref="U12" pin="P$65"/>
+      <node ref="U12" pin="P$64"/>
+      <node ref="Q2" pin="2"/>
+      <node ref="C24" pin="2"/>
+      <node ref="C6" pin="1"/>
+      <node ref="C4" pin="2"/>
+      <node ref="C18" pin="2"/>
+      <node ref="U10" pin="4"/>
+      <node ref="C17" pin="2"/>
+      <node ref="C9" pin="2"/>
+      <node ref="C14" pin="2"/>
+      <node ref="U10" pin="2"/>
+      <node ref="C29" pin="2"/>
+      <node ref="C3" pin="2"/>
+      <node ref="U2" pin="18"/>
+      <node ref="J4" pin="11"/>
+      <node ref="J4" pin="10"/>
+      <node ref="J4" pin="11"/>
+      <node ref="C34" pin="2"/>
+      <node ref="C28" pin="2"/>
+      <node ref="J6" pin="2"/>
+      <node ref="J6" pin="2"/>
+      <node ref="J4" pin="6"/>
+      <node ref="D9" pin="2"/>
+      <node ref="C27" pin="2"/>
+      <node ref="U3" pin="2"/>
+      <node ref="C26" pin="2"/>
+      <node ref="U1" pin="9"/>
+      <node ref="C8" pin="2"/>
+      <node ref="C10" pin="1"/>
+      <node ref="X1" pin="2"/>
+      <node ref="X1" pin="4"/>
+      <node ref="J5" pin="1"/>
+    </net>
+    <net code="2" name="Net-(D8-Pad2)">
+      <node ref="R17" pin="1"/>
+      <node ref="D8" pin="2"/>
+    </net>
+    <net code="3" name="Net-(D3-Pad2)">
+      <node ref="D3" pin="2"/>
+      <node ref="R7" pin="1"/>
+    </net>
+    <net code="4" name="Net-(Q3-Pad1)">
+      <node ref="R20" pin="2"/>
+      <node ref="R21" pin="1"/>
+      <node ref="Q3" pin="1"/>
+    </net>
+    <net code="5" name="+3V3">
+      <node ref="R9" pin="2"/>
+      <node ref="U2" pin="36"/>
+      <node ref="C20" pin="1"/>
+      <node ref="U7" pin="5"/>
+      <node ref="C6" pin="2"/>
+      <node ref="U5" pin="5"/>
+      <node ref="U6" pin="5"/>
+      <node ref="C19" pin="1"/>
+      <node ref="U2" pin="44"/>
+      <node ref="J1" pin="1"/>
+      <node ref="U2" pin="43"/>
+      <node ref="U2" pin="6"/>
+      <node ref="R21" pin="2"/>
+      <node ref="C11" pin="2"/>
+      <node ref="C9" pin="1"/>
+      <node ref="R23" pin="1"/>
+      <node ref="Q5" pin="1"/>
+      <node ref="C4" pin="1"/>
+      <node ref="C3" pin="1"/>
+      <node ref="C7" pin="2"/>
+      <node ref="U3" pin="3"/>
+      <node ref="U1" pin="18"/>
+      <node ref="C10" pin="2"/>
+      <node ref="C8" pin="1"/>
+      <node ref="U10" pin="5"/>
+      <node ref="Q4" pin="1"/>
+      <node ref="R22" pin="1"/>
+      <node ref="Q3" pin="2"/>
+      <node ref="C28" pin="1"/>
+      <node ref="C23" pin="1"/>
+      <node ref="J4" pin="4"/>
+      <node ref="U2" pin="17"/>
+      <node ref="R2" pin="2"/>
+    </net>
+    <net code="6" name="/GPS_PWR">
+      <node ref="U2" pin="30"/>
+      <node ref="R20" pin="1"/>
+    </net>
+    <net code="7" name="Net-(C34-Pad1)">
+      <node ref="L1" pin="2"/>
+      <node ref="C34" pin="1"/>
+      <node ref="Q3" pin="3"/>
+    </net>
+    <net code="8" name="/DTR">
+      <node ref="U12" pin="P$9"/>
+      <node ref="U2" pin="29"/>
+    </net>
+    <net code="9" name="Net-(J4-Pad2)">
+      <node ref="U7" pin="4"/>
+      <node ref="J4" pin="2"/>
+    </net>
+    <net code="10" name="/SD_CS">
+      <node ref="U7" pin="2"/>
+      <node ref="U2" pin="22"/>
+    </net>
+    <net code="11" name="/SD_SCK">
+      <node ref="U2" pin="20"/>
+      <node ref="U5" pin="2"/>
+    </net>
+    <net code="12" name="/CAN_MOSI">
+      <node ref="U1" pin="14"/>
+      <node ref="U2" pin="11"/>
+    </net>
+    <net code="13" name="/X_N">
+      <node ref="X2" pin="1"/>
+      <node ref="C14" pin="1"/>
+      <node ref="U2" pin="1"/>
+    </net>
+    <net code="14" name="VBUS">
+      <node ref="U12" pin="P$25"/>
+      <node ref="C29" pin="1"/>
+      <node ref="J2" pin="1"/>
+      <node ref="R15" pin="1"/>
+      <node ref="R17" pin="2"/>
+      <node ref="U11" pin="5"/>
+    </net>
+    <net code="15" name="Net-(D1-Pad1)">
+      <node ref="D1" pin="1"/>
+      <node ref="R5" pin="2"/>
+    </net>
+    <net code="16" name="Net-(U12-PadP$26)">
+      <node ref="U12" pin="P$26"/>
+    </net>
+    <net code="17" name="Net-(U12-PadP$44)">
+      <node ref="U12" pin="P$44"/>
+    </net>
+    <net code="18" name="Net-(U12-PadP$43)">
+      <node ref="U12" pin="P$43"/>
+    </net>
+    <net code="19" name="Net-(U12-PadP$42)">
+      <node ref="U12" pin="P$42"/>
+    </net>
+    <net code="20" name="Net-(U12-PadP$41)">
+      <node ref="U12" pin="P$41"/>
+    </net>
+    <net code="21" name="Net-(U12-PadP$39)">
+      <node ref="U12" pin="P$39"/>
+    </net>
+    <net code="22" name="Net-(U12-PadP$38)">
+      <node ref="U12" pin="P$38"/>
+    </net>
+    <net code="23" name="Net-(U12-PadP$37)">
+      <node ref="U12" pin="P$37"/>
+    </net>
+    <net code="24" name="Net-(U12-PadP$33)">
+      <node ref="U12" pin="P$33"/>
+    </net>
+    <net code="25" name="Net-(U12-PadP$27)">
+      <node ref="U12" pin="P$27"/>
+    </net>
+    <net code="26" name="Net-(U12-PadP$45)">
+      <node ref="U12" pin="P$45"/>
+    </net>
+    <net code="27" name="Net-(U12-PadP$24)">
+      <node ref="U12" pin="P$24"/>
+    </net>
+    <net code="28" name="Net-(U12-PadP$23)">
+      <node ref="U12" pin="P$23"/>
+    </net>
+    <net code="29" name="Net-(U12-PadP$22)">
+      <node ref="U12" pin="P$22"/>
+    </net>
+    <net code="30" name="Net-(U12-PadP$21)">
+      <node ref="U12" pin="P$21"/>
+    </net>
+    <net code="31" name="Net-(U12-PadP$20)">
+      <node ref="U12" pin="P$20"/>
+    </net>
+    <net code="32" name="Net-(U12-PadP$19)">
+      <node ref="U12" pin="P$19"/>
+    </net>
+    <net code="33" name="Net-(U12-PadP$12)">
+      <node ref="U12" pin="P$12"/>
+    </net>
+    <net code="34" name="Net-(U12-PadP$11)">
+      <node ref="U12" pin="P$11"/>
+    </net>
+    <net code="35" name="Net-(U12-PadP$59)">
+      <node ref="U12" pin="P$59"/>
+    </net>
+    <net code="36" name="Net-(U1-Pad4)">
+      <node ref="U1" pin="4"/>
+    </net>
+    <net code="37" name="Net-(U3-Pad5)">
+      <node ref="U3" pin="5"/>
+    </net>
+    <net code="38" name="Net-(J1-Pad7)">
+      <node ref="J1" pin="7"/>
+    </net>
+    <net code="39" name="Net-(J1-Pad8)">
+      <node ref="J1" pin="8"/>
+    </net>
+    <net code="40" name="Net-(J1-Pad6)">
+      <node ref="J1" pin="6"/>
+    </net>
+    <net code="41" name="Net-(U12-PadP$60)">
+      <node ref="U12" pin="P$60"/>
+    </net>
+    <net code="42" name="Net-(U12-PadP$61)">
+      <node ref="U12" pin="P$61"/>
+    </net>
+    <net code="43" name="Net-(U12-PadP$62)">
+      <node ref="U12" pin="P$62"/>
+    </net>
+    <net code="44" name="Net-(U12-PadP$63)">
+      <node ref="U12" pin="P$63"/>
+    </net>
+    <net code="45" name="Net-(U12-PadP$10)">
+      <node ref="U12" pin="P$10"/>
+    </net>
+    <net code="46" name="Net-(U12-PadP$58)">
+      <node ref="U12" pin="P$58"/>
+    </net>
+    <net code="47" name="Net-(U12-PadP$57)">
+      <node ref="U12" pin="P$57"/>
+    </net>
+    <net code="48" name="Net-(U12-PadP$56)">
+      <node ref="U12" pin="P$56"/>
+    </net>
+    <net code="49" name="Net-(U12-PadP$55)">
+      <node ref="U12" pin="P$55"/>
+    </net>
+    <net code="50" name="Net-(U12-PadP$53)">
+      <node ref="U12" pin="P$53"/>
+    </net>
+    <net code="51" name="Net-(U12-PadP$48)">
+      <node ref="U12" pin="P$48"/>
+    </net>
+    <net code="52" name="Net-(U12-PadP$47)">
+      <node ref="U12" pin="P$47"/>
+    </net>
+    <net code="53" name="Net-(U12-PadP$46)">
+      <node ref="U12" pin="P$46"/>
+    </net>
+    <net code="54" name="VBAT">
+      <node ref="CN1" pin="2"/>
+      <node ref="U8" pin="5"/>
+      <node ref="R11" pin="1"/>
+      <node ref="C27" pin="1"/>
+      <node ref="U12" pin="P$6"/>
+      <node ref="C32" pin="1"/>
+      <node ref="C33" pin="1"/>
+      <node ref="U12" pin="P$5"/>
+      <node ref="U10" pin="1"/>
+      <node ref="D10" pin="1"/>
+      <node ref="C31" pin="1"/>
+      <node ref="U10" pin="3"/>
+      <node ref="U12" pin="P$4"/>
+    </net>
+    <net code="55" name="Net-(U12-PadP$7)">
+      <node ref="U12" pin="P$7"/>
+    </net>
+    <net code="56" name="Net-(U1-Pad5)">
+      <node ref="U1" pin="5"/>
+    </net>
+    <net code="57" name="Net-(D7-Pad2)">
+      <node ref="J5" pin="4"/>
+      <node ref="D7" pin="2"/>
+    </net>
+    <net code="58" name="/12VOUT">
+      <node ref="K1" pin="6"/>
+      <node ref="K1" pin="3"/>
+      <node ref="J5" pin="3"/>
+    </net>
+    <net code="59" name="/VALVE_IN">
+      <node ref="D4" pin="1"/>
+      <node ref="R13" pin="2"/>
+      <node ref="J5" pin="2"/>
+      <node ref="Q4" pin="3"/>
+    </net>
+    <net code="60" name="Net-(J7-Pad1)">
+      <node ref="U12" pin="P$35"/>
+      <node ref="L1" pin="1"/>
+      <node ref="J7" pin="1"/>
+    </net>
+    <net code="61" name="Net-(R1-Pad1)">
+      <node ref="R1" pin="1"/>
+      <node ref="SW1" pin="B"/>
+      <node ref="SW1" pin="B'"/>
+    </net>
+    <net code="62" name="/LIN_SLP">
+      <node ref="U2" pin="14"/>
+      <node ref="U4" pin="2"/>
+    </net>
+    <net code="63" name="/CAN_RST">
+      <node ref="U2" pin="3"/>
+      <node ref="U1" pin="17"/>
+    </net>
+    <net code="64" name="/~SRESET">
+      <node ref="U12" pin="P$16"/>
+      <node ref="U2" pin="41"/>
+    </net>
+    <net code="65" name="Net-(U1-Pad2)">
+      <node ref="U1" pin="2"/>
+      <node ref="U3" pin="4"/>
+    </net>
+    <net code="66" name="Net-(U12-PadP$13)">
+      <node ref="U12" pin="P$13"/>
+    </net>
+    <net code="67" name="Net-(U1-Pad3)">
+      <node ref="U1" pin="3"/>
+    </net>
+    <net code="68" name="Net-(J4-Pad1)">
+      <node ref="J4" pin="1"/>
+    </net>
+    <net code="69" name="Net-(J4-Pad8)">
+      <node ref="J4" pin="8"/>
+    </net>
+    <net code="70" name="Net-(U1-Pad10)">
+      <node ref="U1" pin="10"/>
+    </net>
+    <net code="71" name="Net-(U1-Pad11)">
+      <node ref="U1" pin="11"/>
+    </net>
+    <net code="72" name="Net-(U1-Pad6)">
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="73" name="Net-(J2-Pad4)">
+      <node ref="J2" pin="4"/>
+    </net>
+    <net code="74" name="/SD_MOSI">
+      <node ref="U6" pin="2"/>
+      <node ref="U2" pin="21"/>
+    </net>
+    <net code="75" name="/IGN_DET">
+      <node ref="C22" pin="1"/>
+      <node ref="R25" pin="1"/>
+      <node ref="U2" pin="26"/>
+    </net>
+    <net code="76" name="/IGN_IN">
+      <node ref="D11" pin="1"/>
+      <node ref="J3" pin="3"/>
+      <node ref="Q5" pin="3"/>
+      <node ref="R14" pin="2"/>
+    </net>
+    <net code="77" name="+12V">
+      <node ref="R14" pin="1"/>
+      <node ref="D1" pin="2"/>
+      <node ref="C26" pin="1"/>
+      <node ref="D6" pin="1"/>
+      <node ref="C12" pin="1"/>
+      <node ref="R13" pin="1"/>
+      <node ref="D5" pin="1"/>
+      <node ref="U4" pin="7"/>
+      <node ref="U11" pin="4"/>
+      <node ref="K1" pin="5"/>
+      <node ref="K1" pin="9"/>
+      <node ref="K1" pin="4"/>
+      <node ref="D7" pin="1"/>
+    </net>
+    <net code="78" name="Net-(Q4-Pad2)">
+      <node ref="R24" pin="2"/>
+      <node ref="R22" pin="2"/>
+      <node ref="Q4" pin="2"/>
+    </net>
+    <net code="79" name="Net-(Q5-Pad2)">
+      <node ref="Q5" pin="2"/>
+      <node ref="R23" pin="2"/>
+      <node ref="R25" pin="2"/>
+    </net>
+    <net code="80" name="Net-(R15-Pad2)">
+      <node ref="R15" pin="2"/>
+      <node ref="U11" pin="1"/>
+      <node ref="R16" pin="2"/>
+    </net>
+    <net code="81" name="/CHG_OFF">
+      <node ref="U11" pin="2"/>
+      <node ref="U2" pin="24"/>
+    </net>
+    <net code="82" name="/ANALOGIN">
+      <node ref="C24" pin="1"/>
+      <node ref="R24" pin="1"/>
+      <node ref="U2" pin="23"/>
+    </net>
+    <net code="83" name="/VBAT_CHK">
+      <node ref="U8" pin="1"/>
+      <node ref="U8" pin="4"/>
+      <node ref="U2" pin="32"/>
+    </net>
+    <net code="84" name="/SIMDATA">
+      <node ref="U12" pin="P$30"/>
+      <node ref="J8" pin="C7"/>
+      <node ref="D9" pin="6"/>
+    </net>
+    <net code="85" name="/SIMCLK">
+      <node ref="J8" pin="C3"/>
+      <node ref="U12" pin="P$31"/>
+      <node ref="D9" pin="5"/>
+    </net>
+    <net code="86" name="/SIMRST">
+      <node ref="J8" pin="C2"/>
+      <node ref="D9" pin="4"/>
+      <node ref="U12" pin="P$32"/>
+    </net>
+    <net code="87" name="Net-(J8-PadC6)">
+      <node ref="J8" pin="C6"/>
+    </net>
+    <net code="88" name="Net-(U2-Pad31)">
+      <node ref="U2" pin="31"/>
+    </net>
+    <net code="89" name="Net-(U2-Pad28)">
+      <node ref="U2" pin="28"/>
+    </net>
+    <net code="90" name="Net-(J4-Pad3)">
+      <node ref="U6" pin="4"/>
+      <node ref="J4" pin="3"/>
+    </net>
+    <net code="91" name="Net-(J4-Pad5)">
+      <node ref="J4" pin="5"/>
+      <node ref="U5" pin="4"/>
+    </net>
+    <net code="92" name="Net-(U2-Pad39)">
+      <node ref="U2" pin="39"/>
+    </net>
+    <net code="93" name="Net-(U2-Pad27)">
+      <node ref="U2" pin="27"/>
+    </net>
+    <net code="94" name="Net-(R7-Pad2)">
+      <node ref="R7" pin="2"/>
+      <node ref="U2" pin="25"/>
+    </net>
+    <net code="95" name="1.8V">
+      <node ref="D9" pin="3"/>
+      <node ref="C30" pin="1"/>
+      <node ref="U12" pin="P$29"/>
+      <node ref="J8" pin="C1"/>
+    </net>
+    <net code="96" name="Net-(C21-Pad1)">
+      <node ref="R11" pin="2"/>
+      <node ref="C21" pin="1"/>
+      <node ref="U8" pin="3"/>
+      <node ref="R12" pin="1"/>
+    </net>
+    <net code="97" name="Net-(J1-Pad3)">
+      <node ref="J1" pin="5"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="98" name="/SWCLK">
+      <node ref="J1" pin="4"/>
+      <node ref="U2" pin="45"/>
+    </net>
+    <net code="99" name="/SWDIO">
+      <node ref="U2" pin="46"/>
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="100" name="/~RESET">
+      <node ref="U2" pin="40"/>
+      <node ref="J1" pin="10"/>
+      <node ref="C5" pin="1"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="101" name="/NETSTAT">
+      <node ref="R19" pin="2"/>
+      <node ref="U12" pin="P$50"/>
+    </net>
+    <net code="102" name="/PWRSTAT">
+      <node ref="R18" pin="2"/>
+      <node ref="U12" pin="P$49"/>
+    </net>
+    <net code="103" name="Net-(D6-Pad2)">
+      <node ref="K1" pin="8"/>
+      <node ref="D6" pin="2"/>
+      <node ref="Q2" pin="3"/>
+    </net>
+    <net code="104" name="Net-(Q2-Pad1)">
+      <node ref="R10" pin="1"/>
+      <node ref="Q2" pin="1"/>
+    </net>
+    <net code="105" name="Net-(D5-Pad2)">
+      <node ref="Q1" pin="3"/>
+      <node ref="D5" pin="2"/>
+      <node ref="K1" pin="1"/>
+    </net>
+    <net code="106" name="Net-(Q1-Pad1)">
+      <node ref="Q1" pin="1"/>
+      <node ref="R8" pin="1"/>
+    </net>
+    <net code="107" name="Net-(U4-Pad8)">
+      <node ref="U4" pin="8"/>
+    </net>
+    <net code="108" name="Net-(C15-Pad1)">
+      <node ref="U4" pin="6"/>
+      <node ref="C15" pin="1"/>
+      <node ref="R5" pin="1"/>
+      <node ref="J3" pin="4"/>
+    </net>
+    <net code="109" name="Net-(U4-Pad3)">
+      <node ref="U4" pin="3"/>
+    </net>
+    <net code="110" name="/LIN_RX">
+      <node ref="U2" pin="15"/>
+      <node ref="R2" pin="1"/>
+      <node ref="U4" pin="1"/>
+    </net>
+    <net code="111" name="/LIN_TX">
+      <node ref="U2" pin="13"/>
+      <node ref="U4" pin="4"/>
+    </net>
+    <net code="112" name="/VRTC">
+      <node ref="U12" pin="P$17"/>
+      <node ref="C25" pin="1"/>
+    </net>
+    <net code="113" name="/SIM_RX">
+      <node ref="U2" pin="48"/>
+      <node ref="U12" pin="P$14"/>
+    </net>
+    <net code="114" name="/SIM_TX">
+      <node ref="U12" pin="P$15"/>
+      <node ref="U2" pin="47"/>
+    </net>
+    <net code="115" name="/GSM_ANT">
+      <node ref="U12" pin="P$66"/>
+      <node ref="J6" pin="1"/>
+    </net>
+    <net code="116" name="Net-(D9-Pad1)">
+      <node ref="D9" pin="1"/>
+    </net>
+    <net code="117" name="/PWRKEY">
+      <node ref="U12" pin="P$8"/>
+      <node ref="U2" pin="7"/>
+    </net>
+    <net code="118" name="Net-(NETSTAT1-Pad2)">
+      <node ref="NETSTAT1" pin="2"/>
+      <node ref="R19" pin="1"/>
+    </net>
+    <net code="119" name="Net-(PWRSTAT1-Pad2)">
+      <node ref="PWRSTAT1" pin="2"/>
+      <node ref="R18" pin="1"/>
+    </net>
+    <net code="120" name="Net-(R3-Pad2)">
+      <node ref="R3" pin="2"/>
+      <node ref="U3" pin="8"/>
+    </net>
+    <net code="121" name="Net-(C16-Pad2)">
+      <node ref="C16" pin="2"/>
+      <node ref="R6" pin="1"/>
+    </net>
+    <net code="122" name="Net-(C13-Pad2)">
+      <node ref="C13" pin="2"/>
+      <node ref="R4" pin="1"/>
+    </net>
+    <net code="123" name="/CANL">
+      <node ref="U3" pin="6"/>
+      <node ref="D2" pin="1"/>
+      <node ref="J3" pin="1"/>
+      <node ref="R4" pin="2"/>
+    </net>
+    <net code="124" name="Net-(U1-Pad1)">
+      <node ref="U3" pin="1"/>
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="125" name="/CANH">
+      <node ref="U3" pin="7"/>
+      <node ref="D2" pin="2"/>
+      <node ref="R6" pin="2"/>
+      <node ref="J3" pin="2"/>
+    </net>
+    <net code="126" name="/CAN_SCK">
+      <node ref="U2" pin="12"/>
+      <node ref="U1" pin="13"/>
+    </net>
+    <net code="127" name="/CAN_MISO">
+      <node ref="U1" pin="15"/>
+      <node ref="U2" pin="10"/>
+    </net>
+    <net code="128" name="/CAN_CS">
+      <node ref="U2" pin="9"/>
+      <node ref="U1" pin="16"/>
+    </net>
+    <net code="129" name="Net-(C2-Pad2)">
+      <node ref="U1" pin="7"/>
+      <node ref="X1" pin="1"/>
+      <node ref="C2" pin="2"/>
+    </net>
+    <net code="130" name="/CAN_INT">
+      <node ref="U2" pin="8"/>
+      <node ref="U1" pin="12"/>
+    </net>
+    <net code="131" name="Net-(C1-Pad2)">
+      <node ref="U1" pin="8"/>
+      <node ref="C1" pin="2"/>
+      <node ref="X1" pin="3"/>
+    </net>
+    <net code="132" name="/X_P">
+      <node ref="X2" pin="2"/>
+      <node ref="C17" pin="1"/>
+      <node ref="U2" pin="2"/>
+    </net>
+    <net code="133" name="/SD_DT">
+      <node ref="J4" pin="9"/>
+      <node ref="R9" pin="1"/>
+      <node ref="U2" pin="16"/>
+    </net>
+    <net code="134" name="/R_RELAY">
+      <node ref="U2" pin="38"/>
+      <node ref="R8" pin="2"/>
+    </net>
+    <net code="135" name="/S_RELAY">
+      <node ref="R10" pin="2"/>
+      <node ref="U2" pin="37"/>
+    </net>
+    <net code="136" name="/SD_MISO">
+      <node ref="J4" pin="7"/>
+      <node ref="U2" pin="19"/>
+    </net>
+    <net code="137" name="/D-">
+      <node ref="U2" pin="33"/>
+      <node ref="J2" pin="2"/>
+    </net>
+    <net code="138" name="/D+">
+      <node ref="J2" pin="3"/>
+      <node ref="U2" pin="34"/>
+    </net>
+    <net code="139" name="/AREF">
+      <node ref="U2" pin="4"/>
+      <node ref="C18" pin="1"/>
+    </net>
+  </nets>
+</export>

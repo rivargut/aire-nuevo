@@ -1,0 +1,9 @@
+(sym_lib_table
+  (lib (name ECUGPS-rescue)(type Legacy)(uri ${KIPRJMOD}/ECUGPS-rescue.lib)(options "")(descr ""))
+  (lib (name ECUGPS-eagle-import)(type Legacy)(uri ${KIPRJMOD}/ECUGPS-eagle-import.lib)(options "")(descr ""))
+  (lib (name SparkFun_CAN-Bus_Shield-eagle-import)(type Legacy)(uri "C:/Users/vargar7/Documents/Personal/GPS project/ECUGPS board/CANshield/SparkFun_CAN-Bus_Shield-eagle-import.lib")(options "")(descr ""))
+  (lib (name Adafruit_SIM808_Shield-eagle-import)(type Legacy)(uri "C:/Users/vargar7/Documents/Personal/GPS project/ECUGPS board/eagle/Adafruit_SIM808_Shield-eagle-import.lib")(options "")(descr ""))
+  (lib (name USB3145-XX-X_REVB)(type Legacy)(uri "C:/Users/WIndows/Documents/Personal/GPS project/ECUGPS board/Libraries/USB3145-XX-X_REVB.lib")(options "")(descr ""))
+  (lib (name 78646-3001)(type Legacy)(uri "C:/Users/WIndows/Documents/Personal/GPS project/ECUGPS board/Libraries/78646-3001.lib")(options "")(descr ""))
+  (lib (name SIM8060-6-0-14-00-A)(type Legacy)(uri "C:/Users/WIndows/Documents/Personal/GPS project/ECUGPS board/Libraries/SIM8060-6-0-14-00-A.lib")(options "")(descr ""))
+)
