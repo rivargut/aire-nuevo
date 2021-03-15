@@ -240,11 +240,11 @@ double            ftempLPGLiters ;
 // Ricardo - eliminated the Liters per Second metric
 
 // GPS variables
+int GPSfix;
 double lat, lon, speedkph,heading, altitude;
 double lastlat __attribute__ ((section (".noinit")));
 double lastlon __attribute__ ((section (".noinit")));  // to track last available coordinates
 char gpsdate[20];
-bool gpslock = false;  // Wait until first GPS lock to disable and sleep
 bool FonaSleep = false; // To track if FONA is asleep or not
 uint8_t batreads = 0; // allow 2 measures of charging before turning charger on or off
 
@@ -416,6 +416,7 @@ void setup() {
     nSamples = 0;
     fGasLiters = 0;
     fLPGLiters = 0;
+    GPSfix = 0;
     lastlat = 0;
     lastlon = 0;
     fLPGKm = 0;
@@ -434,10 +435,7 @@ void setup() {
    fonaSerial->begin(38400);
    fona.initPort(*fonaSerial);
    
-   //SimTogglePWRKEY();
-
     printlogln("Resetting SIM808..");
-    pinMode(FONA_RST, OUTPUT);
     digitalWrite(FONA_RST, HIGH);
     delay(10);
     digitalWrite(FONA_RST, LOW);
@@ -446,7 +444,13 @@ void setup() {
 
 
    while (! fona.begin()) {
-     printlogln("Couldn't find FONA - retry");
+      printlogln("Couldn't find FONA - retry");
+      delay(2000);
+      printlogln("Resetting SIM808..");
+      digitalWrite(FONA_RST, LOW);
+      delay(100);
+      digitalWrite(FONA_RST, HIGH);
+
    }
 
 	SIMflag = true;
@@ -659,7 +663,21 @@ void setup() {
    wdt.setup(WDT_SOFTCYCLE8M);
    // Interrupt setup  
    LowPower.attachInterruptWakeup(digitalPinToInterrupt(IGN_DET), Ignition, CHANGE);
-   startmillis = millis(); // discount setup time from delta.
+   
+
+   GetGPSandTimeSpeed(NULL);
+   
+   ProcessSMS();
+   
+   // Time from RTC
+   rtctimestamp(timestamp);
+   printlog("Current Time: "); printlogln(timestamp);
+
+   SDFindFileName(); // Write init to SD file and synch file number to use after reboot.
+   
+   IGN_Det = digitalRead(IGN_DET);
+   ReadOBD();
+
    printlogln("*****  Init End  ******\r\n");
    sendText(SMSphone,"ECU-GPS booted OK");
    while (SMStimeout > 0) {
@@ -668,16 +686,7 @@ void setup() {
       delay(1000);
 
    }
-   ProcessSMS();
-   
-   // Time from RTC
-   rtctimestamp(timestamp);
-   printlog("Current Time: "); printlogln(timestamp);
-
-   SDWriteFile(); // Write init to SD file and synch file number to use after reboot.
-   
-   IGN_Det = digitalRead(IGN_DET);
-   ReadOBD();
+   startmillis = millis(); // discount setup time from delta.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -761,19 +770,9 @@ void ReadOBD() {
         SIMflag = true;
          
     }
-     
-    if (engineflag) { // Ricardo 24 March 2020 - include an engine on check since car could have turned off
-      printlogln("* Engine off - Flag for posting");
-      sendText(SMSphone,"Engine is turned OFF");
-      lastpost = true;
-      postflag = true;
-      engineflag = false;
-      chargersentstatus = false;
-      TC5_time = 60;
-      TC5_start();
 
-      if ((SmsToSend == 0) && !HTTPsending) {
-      // Turn off GPS
+    if ((SmsToSend == 0)) {
+    // Turn off GPS
       if (GPSflag == true) {
          if (!fona.enableGPS(false))
           printlogln("Failed to turn OFF GPS!");
@@ -784,12 +783,37 @@ void ReadOBD() {
          }
       }
     }
+     
+    if (engineflag) { // Ricardo 24 March 2020 - include an engine on check since car could have turned off
+     
+      printlogln("* Engine off - Flag for posting");
+      sendText(SMSphone,"Engine is turned OFF");
+      lastpost = true;
+      postflag = true;
+      engineflag = false;
+      chargersentstatus = false;
+      TC5_time = 60;
+      TC5_start();
+
     }
 
     
   
   } // END IGN_Det == false
   else {  // IGN_Det == true
+
+    if ((SmsToSend == 0) && !HTTPsending) {
+      // Turn on GPS in case it was disabled
+      if (GPSflag == false) {
+         if (!fona.enableGPS(true))
+          printlogln("Failed to turn ON GPS!");
+         else {
+          digitalWrite(PWR_GPS,LOW);
+          printlogln("GPS Enabled!");
+          GPSflag = true;
+         }
+      }
+    }
 
     if (!engineflag) {
   	  rtctimestamp(timestamp);
@@ -812,18 +836,7 @@ void ReadOBD() {
 	    sendText(SMSphone,"Engine is turned ON");  
 	    printlogln("Fuel\tRPM\tSpeed\tIMAP\tIAT\tAirGr\tms\tL/Hr\tKmGas\tKmLPG\tGasTime\tLPGTime\tGas_L\tLPG_L\tAvGas_LPH\tAvLPG_LPH\tLat\tLon\tSpeed\tAlt");
     }
-    if ((SmsToSend == 0) && !HTTPsending) {
-      // Turn on GPS in case it was disabled
-      if (GPSflag == false) {
-         if (!fona.enableGPS(true))
-          printlogln("Failed to turn ON GPS!");
-         else {
-          digitalWrite(PWR_GPS,LOW);
-          printlogln("GPS Enabled!");
-          GPSflag = true;
-         }
-      }
-    }
+   
     
 	// Ricardo 26 June 2020 - Moved OBD types inside the reading logic, including simulation
   // Moved Fuel type read inside with engine data  
@@ -1270,7 +1283,16 @@ void ReadOBD() {
     fPreviousSpeed = fSpeed;
     fGasPerc = 100* fGasTime / (fGasTime + fLPGTime);
     fLPGPerc = 100* fLPGTime / (fGasTime + fLPGTime);
-
+    
+    if (GPSfix != 1) { // in case GPS is not locked
+      if (bFuelType) { // LPG
+        fLPGKmSpeed += (fSpeed + fPreviousSpeed) * elapsedmillis/7200000;      // fixed Km formula using trapezoid 12/20/2020
+      }
+      else { // Gas
+        fGasKmSpeed += (fSpeed + fPreviousSpeed) * elapsedmillis/7200000;      // fixed Km formula using trapezoid 12/20/2020
+      }
+    }
+    
     if (!HTTPsending && (GPScount == 5)) {
       if (bFuelType) { // LPG
         GetGPSandTimeSpeed(&fLPGKm);  
@@ -1284,6 +1306,8 @@ void ReadOBD() {
     else {
       GPScount++;
     }
+  
+    
 
         
     sprintf(stringbuffer,"%4.0f\t%.0f\t%.0f\t%.0f\t%.3f\t%d\t%.3f\t%.4f\t%.4f\t%.3f\t%.3f\t%.3f\t%.3f\t%.2f\t%.2f\t%.4f\t%.4f\t%.1f\t%.1f\t",fRPM,fSpeed,fIMAP,fIAT,fAir,elapsedmillis,fLPH,fGasKm,fLPGKm,fGasTime,fLPGTime,fGasLiters,fLPGLiters,fAvgGasLPH,fAvgLPGLPH,lat,lon,speedkph,altitude);
@@ -1338,17 +1362,34 @@ void ProcessSMS () {
   // Read # of SMS, process them all
   uint16_t smslen;
   count = fona.getNumSMS();
-  
+  sprintf(stringbuffer,"# of SMS received: %d",count);
+  printlogln(stringbuffer);
   if (count == 0) {
 	  printlogln("No SMS received");
   }
   else if (count < 0) {
 	  printlogln("ERROR: Could not read # SMS");
+
+    // 15 March 2021 - an error here could mean SIM is unresponsive. try rebooting SIM
+    printlogln("Resetting SIM808..");
+    digitalWrite(FONA_RST, HIGH);
+    delay(10);
+    digitalWrite(FONA_RST, LOW);
+    delay(100);
+    digitalWrite(FONA_RST, HIGH);
+    while (! fona.begin()) {
+      printlogln("Couldn't find FONA - retry");
+      delay(2000);
+      printlogln("Resetting SIM808..");
+      digitalWrite(FONA_RST, LOW);
+      delay(100);
+      digitalWrite(FONA_RST, HIGH);  
+    }
   }
   else {
 	  if (count > 0) {
-  	  sprintf(stringbuffer,"# of SMS received: %d",count);
-  	  printlogln(stringbuffer);
+  	  
+  	  
   
   	  int smsid = count;
   	  bool smsfound = false;
@@ -1708,9 +1749,8 @@ void ProcessSMS () {
 	if (!engineflag ) {
 		printlogln("Engine is off - Sleep SIM808 via DTR");
 		digitalWrite(DTR,HIGH);
-   digitalWrite(LIN_SLP, LOW);
-        //SimTogglePWRKEY();
-        SIMflag = false;
+    digitalWrite(LIN_SLP, LOW);
+    SIMflag = false;
 	}
 	
 } // ProcessSMS
@@ -1855,7 +1895,7 @@ bool HTTPPost() {
               ReadOBD();
               if (millis() > httptimeout + 60000) {
                  printlogln("Timeout while doing HTTP Post!");
-                 timeoutflag = true;
+                 //timeoutflag = true;  // 15 March2021 timeout disabled. Most probable is OK message malformed, but sending was ok if GPRS was enabled ok. this caused double uploadings
                  break;
               }
               
@@ -2012,25 +2052,30 @@ void GetGPSandTimeSpeed(double *cumdist) {
       double radlat,radlon,v_a,distance;
       double radius = 6371;
         
-      if (fona.getGPS(gpsdate,&lat,&lon,&speedkph,&heading,&altitude) ) {
+      if (fona.getGPS(gpsdate,&GPSfix, &lat,&lon,&speedkph,&heading,&altitude) ) {
         //sprintf(stringbuffer,"Latitude: %f, Longitude: %f, Speed: %f, Heading: %f, Alt: %f",lat,lon,speedkph,heading,altitude);
         //printlogln(stringbuffer);
         
         // Calculate distance based on previous GPS point
-        if (lastlat != 0) {
+        if (lastlat != 0 && cumdist != NULL && GPSfix == 1) {
           radlat = (lat-lastlat)*PI/180;
           radlon = (lon-lastlon)*PI/180;
           v_a = sin(radlat/2) * sin(radlat/2) + cos(lat*PI/180) * cos(lastlat*PI/180) * sin(radlon/2) * sin(radlon/2);
 
           distance = 2 * radius * atan2(sqrt(v_a),sqrt(1-v_a));
-          if (distance > 0.002) {
+          if (distance > 0.002 && distance < 10) { // remove spurious 
             *cumdist += distance;
              
           }
           
         }
-        lastlat = lat;
-        lastlon = lon;
+        if (GPSfix == 1 && distance < 10) {
+          lastlat = lat;
+          lastlon = lon;
+        } else {
+          lat = lastlat;
+          lon = lastlon;
+        }
 
         //printlog("GPS Date: ");printlogln(gpsdate);
         hours = valueFromString(gpsdate,8,2);
@@ -2213,6 +2258,35 @@ void SendSingleText() {
     }
 }
 
+void SDFindFileName() {
+  // Finds the next available filename, shoul dbe called only once at bootup
+  // filecount 
+  bool filenamefound = false;
+    // see if the card is present and can be initialized:
+    if (digitalRead(SD_DT) == HIGH) {
+      SerialUSB.println("SD card not present");
+    }
+    else {
+      if (SD.begin(SD_CS)) {
+        SerialUSB.println("SD card initialized");
+        
+        while (!filenamefound) {
+          sprintf(filename,"%05d.txt",filecount);
+          if (!SD.exists(filename)) {
+            filenamefound = true;
+          }
+          else {
+            filecount++;
+          }
+        } 
+      } 
+      else {
+        SerialUSB.println("SD card init Error");
+      }
+        
+    }
+}
+
 
 void SDWriteFile() { 
     bool filenamefound = false;
@@ -2223,24 +2297,13 @@ void SDWriteFile() {
     else {
 	  
       if (SD.begin(SD_CS)) {
-        SerialUSB.println("SD card initialized");
-		
-        while (!filenamefound) {
-			    sprintf(filename,"%05d.txt",filecount);
-			    if (!SD.exists(filename)) {
-				    filenamefound = true;
-				    datafile = SD.open(filename, FILE_WRITE);
-				    SerialUSB.print("File open: "); SerialUSB.println(filename);
-			    }
-			    else{
-				    filecount++;
-			    }
-		}
-		SerialUSB.println("Writing data buffer to file.. ");
-		datafile.write(filebuffer,sizeof(filebuffer));
-		datafile.close();
-			
-      }
+        sprintf(filename,"%05d.txt",filecount);
+  	    datafile = SD.open(filename, FILE_WRITE);
+  	    SerialUSB.print("File open: "); SerialUSB.println(filename);
+        SerialUSB.println("Writing data buffer to file.. ");
+        datafile.write(filebuffer,sizeof(filebuffer)); // data will be written at the end of existing file
+        datafile.close();                                                           
+		  }
       else {
         SerialUSB.println("SD card init Error");
       }
@@ -2256,6 +2319,7 @@ void DayClosingPost() //Daniel Castro 29/2/2020. Makes post at the end of the da
     if (!SMSsent) {
 		  if(HTTPPost()) alreadyPosted = true;
     }
+    filecount++; // increase filename at the end of the day
 	}
 	if (rtc.getHours() == 1) alreadyPosted = false;
 }
@@ -2299,19 +2363,6 @@ void BattMeasure(void) {
     } // END Battery read
   }
 	
-}
-
-void SimTogglePWRKEY()
-{
-	
-	printlogln("Toggling PWRKEY...");
-	digitalWrite(FONA_PWRKEY, HIGH);
-	delay(1000);
-	digitalWrite(FONA_PWRKEY, LOW);
-	delay(2000);
-	digitalWrite(FONA_PWRKEY, HIGH);
-	delay(500);
-  
 }
 
 void Ignition(void) {
@@ -2618,7 +2669,7 @@ void gpsstatus() {
     if (stat == 2) SerialUSB.println(F("Posicion GPS 2D establecida"));
     if (stat == 3) SerialUSB.println(F("Posicion GPS 3D establecida"));
     if (stat >= 2) {
-      if (fona.getGPS(gpsdate, &lat,&lon,&speedkph,&heading,&altitude) ) {
+      if (fona.getGPS(gpsdate, &GPSfix, &lat,&lon,&speedkph,&heading,&altitude) ) {
       sprintf(stringbuffer,"Posicion GPS encontrada! Latitud: %f, Longitud: %f, Altitud: %f",lat,lon,altitude);
       SerialUSB.println(stringbuffer);
       if (fona.getGPStime(gpsdate)) {
