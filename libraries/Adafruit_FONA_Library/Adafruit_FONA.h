@@ -69,7 +69,7 @@
 
 class Adafruit_FONA : public FONAStreamType {
  public:
-  Adafruit_FONA(int8_t r);
+  Adafruit_FONA();
   boolean initPort(FONAStreamType &port);
   boolean begin(void);
   uint8_t type();
@@ -89,12 +89,15 @@ class Adafruit_FONA : public FONAStreamType {
   boolean enableRTC(uint8_t i);
   boolean readRTC(uint8_t *year, uint8_t *month, uint8_t *date, uint8_t *hr, uint8_t *min, uint8_t *sec);
 
+  boolean powerDown(void);
+  
   // Battery and ADC
   boolean getADCVoltage(uint16_t *v);
   boolean getBattPercent(uint16_t *p);
   boolean getBattVoltage(uint16_t *v);
   boolean enableBattCharging(uint8_t i);
   boolean setPowerMode(uint8_t i);
+  boolean SleepMode(uint8_t i);
 
   // SIM query
   uint8_t unlockSIM(char *pin);
@@ -105,27 +108,13 @@ class Adafruit_FONA : public FONAStreamType {
   // IMEI
   uint8_t getIMEI(char *imei);
 
-  // set Audio output
-  boolean setAudio(uint8_t a);
-  boolean setVolume(uint8_t i);
-  uint8_t getVolume(void);
-  boolean playToolkitTone(uint8_t t, uint16_t len);
-  boolean setMicVolume(uint8_t a, uint8_t level);
-  boolean playDTMF(char tone);
-
-  // FM radio functions.
-  boolean tuneFMradio(uint16_t station);
-  boolean FMradio(boolean onoff, uint8_t a = FONA_HEADSETAUDIO);
-  boolean setFMVolume(uint8_t i);
-  int8_t getFMVolume();
-  int8_t getFMSignalLevel(uint16_t station);
-
   // SMS handling
   boolean setSMSInterrupt(uint8_t i);
   uint8_t getSMSInterrupt(void);
   int8_t getNumSMS(void);
   boolean readSMS(uint8_t i, char *smsbuff, uint16_t max, uint16_t *readsize);
   boolean sendSMS(char *smsaddr, char *smsmsg);
+  int8_t sendSMScheck();
   boolean deleteSMS(uint8_t i);
   boolean getSMSSender(uint8_t i, char *sender, int senderlen);
   boolean sendUSSD(char *ussdmsg, char *ussdbuff, uint16_t maxlen, uint16_t *readlen);
@@ -141,12 +130,17 @@ class Adafruit_FONA : public FONAStreamType {
   boolean getGSMLoc(uint16_t *replycode, char *buff, uint16_t maxlen);
   boolean getGSMLoc(float *lat, float *lon);
   void setGPRSNetworkSettings(FONAFlashStringPtr apn, FONAFlashStringPtr username=0, FONAFlashStringPtr password=0);
+  
+  // Phonebook
+  boolean ReadPhonebook(uint8_t index, char *number, char *name);
+  boolean WritePhonebook(uint8_t index, char *number, char *name);
 
+  
   // GPS handling
   boolean enableGPS(boolean onoff);
   int8_t GPSstatus(void);
   uint8_t getGPS(uint8_t arg, char *buffer, uint8_t maxbuff);
-  boolean getGPS(float *lat, float *lon, float *speed_kph=0, float *heading=0, float *altitude=0);
+  boolean getGPS(char *date, int* fixstatus, double *lat, double *lon, double *speed_kph=0, double *heading=0, double *altitude=0);
   boolean getGPStime(char *date);
   boolean enableGPSNMEA(uint8_t nmea);
 
@@ -157,7 +151,11 @@ class Adafruit_FONA : public FONAStreamType {
   boolean TCPsend(char *packet, uint8_t len);
   uint16_t TCPavailable(void);
   uint16_t TCPread(uint8_t *buff, uint8_t len);
-
+  
+  
+  boolean FTP_init(FONAFlashStringPtr server, FONAFlashStringPtr user, FONAFlashStringPtr pass);
+  boolean FTP_sendfile(char* path, char* filename, char* pass);
+  
   // HTTP low level interface (maps directly to SIM800 commands).
   boolean HTTP_init();
   boolean HTTP_term();
@@ -167,14 +165,17 @@ class Adafruit_FONA : public FONAStreamType {
   boolean HTTP_para(FONAFlashStringPtr parameter, FONAFlashStringPtr value);
   boolean HTTP_para(FONAFlashStringPtr parameter, int32_t value);
   boolean HTTP_data(uint32_t size, uint32_t maxTime=10000);
-  boolean HTTP_action(uint8_t method, uint16_t *status, uint16_t *datalen, int32_t timeout = 10000);
+  boolean HTTP_action(uint8_t method,uint16_t *status, uint16_t *datalen, int32_t timeout);
   boolean HTTP_readall(uint16_t *datalen);
   boolean HTTP_ssl(boolean onoff);
 
   // HTTP high level interface (easier to use, less flexible).
   boolean HTTP_GET_start(char *url, uint16_t *status, uint16_t *datalen);
   void HTTP_GET_end(void);
-  boolean HTTP_POST_start(char *url, FONAFlashStringPtr contenttype, const uint8_t *postdata, uint16_t postdatalen,  uint16_t *status, uint16_t *datalen);
+  boolean HTTP_POST_start(char *url, FONAFlashStringPtr contenttype, const uint8_t *postdata, uint16_t postdatalen,uint16_t *status, uint16_t *datalen);
+  boolean HTTP_POST_start_asynch(char *url, FONAFlashStringPtr contenttype, const uint8_t *postdata, uint16_t postdatalen);
+  boolean HTTP_POST_start_check(uint16_t *status, uint16_t *datalen);
+  
   void HTTP_POST_end(void);
   void setUserAgent(FONAFlashStringPtr useragent);
 
@@ -200,7 +201,6 @@ class Adafruit_FONA : public FONAStreamType {
 
 
  protected:
-  int8_t _rstpin;
   uint8_t _type;
 
   char replybuffer[255];
@@ -213,8 +213,9 @@ class Adafruit_FONA : public FONAStreamType {
 
   // HTTP helpers
   boolean HTTP_setup(char *url);
-
+  
   void flushInput();
+  boolean SIMreset();
   uint16_t readRaw(uint16_t b);
   uint8_t readline(uint16_t timeout = FONA_DEFAULT_TIMEOUT_MS, boolean multiline = false);
   uint8_t getReply(char *send, uint16_t timeout = FONA_DEFAULT_TIMEOUT_MS);
@@ -250,7 +251,7 @@ class Adafruit_FONA : public FONAStreamType {
 class Adafruit_FONA_3G : public Adafruit_FONA {
 
  public:
-  Adafruit_FONA_3G (int8_t r) : Adafruit_FONA(r) { _type = FONA3G_A; }
+  Adafruit_FONA_3G () : Adafruit_FONA() { _type = FONA3G_A; }
 
     boolean getBattVoltage(uint16_t *v);
     boolean playToolkitTone(uint8_t t, uint16_t len);
